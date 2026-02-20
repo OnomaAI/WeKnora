@@ -1177,7 +1177,8 @@ func (t *KnowledgeSearchTool) formatOutput(
 	}
 
 	// Add statistics and recommendations for each knowledge
-	output += "\n=== 检索统计与建议 ===\n\n"
+	// output += "\n=== 检索统计与建议 ===\n\n"
+	output += "\n=== Retrieval Statistics & Suggestions ===\n\n"
 	for knowledgeID, retrievedChunks := range knowledgeChunkMap {
 		totalChunks := knowledgeTotalMap[knowledgeID]
 		retrievedCount := len(retrievedChunks)
@@ -1187,10 +1188,14 @@ func (t *KnowledgeSearchTool) formatOutput(
 			percentage := float64(retrievedCount) / float64(totalChunks) * 100
 			remaining := totalChunks - int64(retrievedCount)
 
-			output += fmt.Sprintf("文档: %s (%s)\n", title, knowledgeID)
-			output += fmt.Sprintf("  总 Chunk 数: %d\n", totalChunks)
-			output += fmt.Sprintf("  已召回: %d 个 (%.1f%%)\n", retrievedCount, percentage)
-			output += fmt.Sprintf("  未召回: %d 个\n", remaining)
+			// output += fmt.Sprintf("文档: %s (%s)\n", title, knowledgeID)
+			output += fmt.Sprintf("Document: %s (%s)\n", title, knowledgeID)
+			// output += fmt.Sprintf("  总 Chunk 数: %d\n", totalChunks)
+			output += fmt.Sprintf("  Total chunks: %d\n", totalChunks)
+			// output += fmt.Sprintf("  已召回: %d 个 (%.1f%%)\n", retrievedCount, percentage)
+			output += fmt.Sprintf("  Retrieved: %d (%.1f%%)\n", retrievedCount, percentage)
+			// output += fmt.Sprintf("  未召回: %d 个\n", remaining)
+			output += fmt.Sprintf("  Not retrieved: %d\n", remaining)
 
 		}
 	}
@@ -1254,10 +1259,12 @@ func (t *KnowledgeSearchTool) getEnrichedPassage(ctx context.Context, result *ty
 	var imageTexts []string
 	for _, img := range imageInfos {
 		if img.Caption != "" {
-			imageTexts = append(imageTexts, fmt.Sprintf("图片描述: %s", img.Caption))
+			// imageTexts = append(imageTexts, fmt.Sprintf("图片描述: %s", img.Caption))
+			imageTexts = append(imageTexts, fmt.Sprintf("Image caption: %s", img.Caption))
 		}
 		if img.OCRText != "" {
-			imageTexts = append(imageTexts, fmt.Sprintf("图片文本: %s", img.OCRText))
+			// imageTexts = append(imageTexts, fmt.Sprintf("图片文本: %s", img.OCRText))
+			imageTexts = append(imageTexts, fmt.Sprintf("Image OCR text: %s", img.OCRText))
 		}
 	}
 

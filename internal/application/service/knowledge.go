@@ -1975,12 +1975,15 @@ func (s *knowledgeService) generateQuestionsWithContext(ctx context.Context,
 	// Build context section
 	var contextSection string
 	if prevContent != "" || nextContent != "" {
-		contextSection = "## 上下文信息（仅供参考，帮助理解主要内容）\n"
+		// contextSection = "## 上下文信息（仅供参考，帮助理解主要内容）\n"
+		contextSection = "## Context Information(for reference only, to help understand the main context)\n"
 		if prevContent != "" {
-			contextSection += fmt.Sprintf("【前文】%s\n", prevContent)
+			// contextSection += fmt.Sprintf("【前文】%s\n", prevContent)
+			contextSection += fmt.Sprintf("【Previous Context】%s\n", prevContent)
 		}
 		if nextContent != "" {
-			contextSection += fmt.Sprintf("【后文】%s\n", nextContent)
+			// contextSection += fmt.Sprintf("【后文】%s\n", nextContent)
+			contextSection += fmt.Sprintf("【Previous Context】%s\n", prevContent)
 		}
 		contextSection += "\n"
 	}
@@ -2028,32 +2031,59 @@ func (s *knowledgeService) generateQuestionsWithContext(ctx context.Context,
 }
 
 // Default prompt for question generation with context support
-const defaultQuestionGenerationPrompt = `你是一个专业的问题生成助手。你的任务是根据给定的【主要内容】生成用户可能会问的相关问题。
+// const defaultQuestionGenerationPrompt = `你是一个专业的问题生成助手。你的任务是根据给定的【主要内容】生成用户可能会问的相关问题。
+
+// {{context}}
+// ## 主要内容（请基于此内容生成问题）
+// 文档名称：{{doc_name}}
+// 文档内容：
+// {{content}}
+
+// ## 核心要求
+// - 生成的问题必须与【主要内容】直接相关
+// - 问题中禁止使用任何代词或指代词（如"它"、"这个"、"该文档"、"本文"、"文中"、"其"等），必须用具体名称替代
+// - 问题必须是完整独立的，脱离上下文也能被理解
+// - 问题应该是用户在实际场景中可能会提出的自然问题
+// - 问题应该多样化，覆盖内容的不同方面
+// - 每个问题应该简洁明了，长度控制在30字以内
+// - 生成的问题数量为 {{question_count}} 个
+
+// ## 问题类型建议
+// - 定义类：什么是...？...是什么？
+// - 原因类：为什么...？...的原因是什么？
+// - 方法类：如何...？怎样...？
+// - 比较类：...和...有什么区别？
+// - 应用类：...可以用于什么场景？
+
+// ## 输出格式
+// 直接输出问题列表，每行一个问题，不要有序号或其他前缀。`
+const defaultQuestionGenerationPrompt = `You are a professional question generation assistant. Your task is to generate related questions that users might ask based on the given [Main Content].
 
 {{context}}
-## 主要内容（请基于此内容生成问题）
-文档名称：{{doc_name}}
-文档内容：
+## Main Content (Please generate questions based on this content)
+Document Name: {{doc_name}}
+Document Content:
 {{content}}
 
-## 核心要求
-- 生成的问题必须与【主要内容】直接相关
-- 问题中禁止使用任何代词或指代词（如"它"、"这个"、"该文档"、"本文"、"文中"、"其"等），必须用具体名称替代
-- 问题必须是完整独立的，脱离上下文也能被理解
-- 问题应该是用户在实际场景中可能会提出的自然问题
-- 问题应该多样化，覆盖内容的不同方面
-- 每个问题应该简洁明了，长度控制在30字以内
-- 生成的问题数量为 {{question_count}} 个
+## Core Requirements
+- The generated questions must be directly related to the [Main Content]
+- Do not use any pronouns or referential words in the questions (such as "it", "this", "the document", "the text", "thereof", etc.); always replace them with specific names
+- Each question must be complete and independent, understandable without additional context
+- Questions should reflect natural queries that users might ask in real scenarios
+- Questions should be diverse and cover different aspects of the content
+- Each question should be concise and clear, limited to within 30 words
+- Generate exactly {{question_count}} questions
 
-## 问题类型建议
-- 定义类：什么是...？...是什么？
-- 原因类：为什么...？...的原因是什么？
-- 方法类：如何...？怎样...？
-- 比较类：...和...有什么区别？
-- 应用类：...可以用于什么场景？
+## Suggested Question Types
+- Definition: What is ...? / ... refers to what?
+- Cause: Why ...? / What is the reason for ...?
+- Method: How to ...? / What is the way to ...?
+- Comparison: What is the difference between ... and ...?
+- Application: In what scenarios can ... be used?
 
-## 输出格式
-直接输出问题列表，每行一个问题，不要有序号或其他前缀。`
+## Output Format
+Directly output the list of questions, one per line, without numbering or any prefixes.
+Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying.`
 
 // GetKnowledgeFile retrieves the physical file associated with a knowledge entry
 func (s *knowledgeService) GetKnowledgeFile(ctx context.Context, id string) (io.ReadCloser, string, error) {
