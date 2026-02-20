@@ -241,19 +241,27 @@ func (a *CustomAgent) IsAgentMode() bool {
 func GetBuiltinQuickAnswerAgent(tenantID uint64) *CustomAgent {
 	return &CustomAgent{
 		ID:          BuiltinQuickAnswerID,
-		Name:        "快速问答",
-		Description: "基于知识库的 RAG 问答，快速准确地回答问题",
+		// Name:        "快速问答",
+		Name:		 "Quick Q&A",
+		// Description: "基于知识库的 RAG 问答，快速准确地回答问题",
+		Description: "Knowledge base–driven RAG Q&A for fast and accurate answers",
 		IsBuiltin:   true,
 		TenantID:    tenantID,
 		Config: CustomAgentConfig{
 			AgentMode:    AgentModeQuickAnswer,
 			SystemPrompt: "",
-			ContextTemplate: `请根据以下参考资料回答用户问题。
+// 			ContextTemplate: `请根据以下参考资料回答用户问题。
 
-参考资料：
+// 参考资料：
+// {{contexts}}
+
+// 用户问题：{{query}}`,
+			ContextTemplate: ContextTemplate: `Please answer the user's question based on the following reference materials. Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying.
+
+Reference Materials:
 {{contexts}}
 
-用户问题：{{query}}`,
+User Question: {{query}}`,
 			Temperature:                 0.7,
 			MaxCompletionTokens:         2048,
 			WebSearchEnabled:            true,
@@ -284,8 +292,10 @@ func GetBuiltinQuickAnswerAgent(tenantID uint64) *CustomAgent {
 func GetBuiltinSmartReasoningAgent(tenantID uint64) *CustomAgent {
 	return &CustomAgent{
 		ID:          BuiltinSmartReasoningID,
-		Name:        "智能推理",
-		Description: "ReAct 推理框架，支持多步思考和工具调用",
+		// Name:        "智能推理",
+		Name: 		 "Intelligent Reasoning",
+		// Description: "ReAct 推理框架，支持多步思考和工具调用",
+		Description: "ReAct reasoning framework, supports multi-step thinking and tool usage (tool calling)",
 		IsBuiltin:   true,
 		TenantID:    tenantID,
 		Config: CustomAgentConfig{
@@ -321,8 +331,10 @@ func GetBuiltinSmartReasoningAgent(tenantID uint64) *CustomAgent {
 func GetBuiltinDataAnalystAgent(tenantID uint64) *CustomAgent {
 	return &CustomAgent{
 		ID:          BuiltinDataAnalystID,
-		Name:        "数据分析师",
-		Description: "专业数据分析智能体，支持 CSV/Excel 文件的 SQL 查询与统计分析",
+		// Name:        "数据分析师",
+		Name:        "Data Analyst",
+		// Description: "专业数据分析智能体，支持 CSV/Excel 文件的 SQL 查询与统计分析",
+		Description: "A professional data analysis agent that supports SQL queries and statistical analysis for CSV/Excel files",
 		Avatar:      "📊",
 		IsBuiltin:   true,
 		TenantID:    tenantID,
