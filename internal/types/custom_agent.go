@@ -256,7 +256,7 @@ func GetBuiltinQuickAnswerAgent(tenantID uint64) *CustomAgent {
 // {{contexts}}
 
 // 用户问题：{{query}}`,
-			ContextTemplate: ContextTemplate: `Please answer the user's question based on the following reference materials. Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying.
+			ContextTemplate: `Please answer the user's question based on the following reference materials. Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying.
 
 Reference Materials:
 {{contexts}}
