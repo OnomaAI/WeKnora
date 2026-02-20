@@ -96,14 +96,15 @@ docker compose logs -f app docreader postgres minio redis
 
 ### Step 7. 특정 서비스만 재시작
 - 설정을 바꾸고 특정 서비스를 재시작해야 할 때, docker-compose.yml 파일에서 해당 서비스를 다시 시작
+- 서비스들이 named volume을 사용하기 때문에 volume 이름을 바꾸거나 docker compose down만 하지 않으면, 컨테이터 volume data는 보존된다.
 ```bash
-[env] docker compose up -d --no-deps --force-recreate [service-name]
+[env] docker compose up -d --build [service-name]
 ```
 
 ---
 
 ## 4) 현재 .env 기준 접속 주소
-- Web UI: `http://localhost:88`
+- Web UI: `http://localhost:8319`
 - API: `http://localhost:8218`
 - Docreader(gRPC): `localhost:50051`
 - MinIO API: `http://localhost:9000`
