@@ -513,13 +513,14 @@ func (e *AgentEngine) executeLoop(
 		})
 
 		// Stream final answer generation through EventBus
-		if err := e.streamFinalAnswerToEventBus(ctx, query, state, sessionID); err != nil {
-			logger.Errorf(ctx, "Failed to synthesize final answer: %v", err)
-			common.PipelineError(ctx, "Agent", "final_answer_failed", map[string]interface{}{
-				"error": err.Error(),
-			})
-			state.FinalAnswer = "抱歉，我无法生成完整的答案。"
-		}
+			if err := e.streamFinalAnswerToEventBus(ctx, query, state, sessionID); err != nil {
+				logger.Errorf(ctx, "Failed to synthesize final answer: %v", err)
+				common.PipelineError(ctx, "Agent", "final_answer_failed", map[string]interface{}{
+					"error": err.Error(),
+				})
+				// state.FinalAnswer = "抱歉，我无法生成完整的答案。"
+				state.FinalAnswer = "Sorry, I could not generate a complete answer."
+			}
 		state.IsComplete = true
 	}
 
@@ -692,13 +693,22 @@ func (e *AgentEngine) streamReflectionToEventBus(
 	sessionID string,
 ) (string, error) {
 	// Simplified reflection without BuildReflectionPrompt
-	reflectionPrompt := fmt.Sprintf(`请评估刚才调用工具 %s 的结果，并决定下一步行动。
+// 	reflectionPrompt := fmt.Sprintf(`请评估刚才调用工具 %s 的结果，并决定下一步行动。
 
-工具返回: %s
+// 工具返回: %s
 
-思考:
-1. 结果是否满足需求？
-2. 下一步应该做什么？`, toolName, result)
+// 思考:
+// 1. 结果是否满足需求？
+// 2. 下一步应该做什么？`, toolName, result)
+	reflectionPrompt := fmt.Sprintf(`Please evaluate the result of the tool call %s and decide the next action.
+
+Tool return: %s
+
+Thought:
+
+Does the result meet the requirements?
+
+What should be done next?`, toolName, result)
 
 	messages := []chat.Message{
 		{Role: "user", Content: reflectionPrompt},
@@ -850,11 +860,12 @@ func (e *AgentEngine) streamFinalAnswerToEventBus(
 	toolResultCount := 0
 	for stepIdx, step := range state.RoundSteps {
 		for toolIdx, toolCall := range step.ToolCalls {
-			toolResultCount++
-			messages = append(messages, chat.Message{
-				Role:    "user",
-				Content: fmt.Sprintf("工具 %s 返回: %s", toolCall.Name, toolCall.Result.Output),
-			})
+				toolResultCount++
+				messages = append(messages, chat.Message{
+					Role:    "user",
+					// Content: fmt.Sprintf("工具 %s 返回: %s", toolCall.Name, toolCall.Result.Output),
+					Content: fmt.Sprintf("Tool %s returned: %s", toolCall.Name, toolCall.Result.Output),
+				})
 			logger.Debugf(ctx, "[Agent][FinalAnswer] Added tool result [Step-%d][Tool-%d]: %s (output: %d chars)",
 				stepIdx+1, toolIdx+1, toolCall.Name, len(toolCall.Result.Output))
 		}
@@ -864,17 +875,29 @@ func (e *AgentEngine) streamFinalAnswerToEventBus(
 		len(messages), toolResultCount)
 
 	// Add final answer prompt
-	finalPrompt := fmt.Sprintf(`基于上述工具调用结果，请为用户问题生成完整答案。
+// 	finalPrompt := fmt.Sprintf(`基于上述工具调用结果，请为用户问题生成完整答案。
 
-用户问题: %s
+// 用户问题: %s
 
-要求:
-1. 基于实际检索到的内容回答
-2. 清晰标注信息来源 (chunk_id, 文档名)
-3. 结构化组织答案
-4. 如信息不足，诚实说明
+// 要求:
+// 1. 基于实际检索到的内容回答
+// 2. 清晰标注信息来源 (chunk_id, 文档名)
+// 3. 结构化组织答案
+// 4. 如信息不足，诚实说明
 
-现在请生成最终答案:`, query)
+// 现在请生成最终答案:`, query)
+	finalPrompt := fmt.Sprintf(`Based on the above tool call results, generate a complete answer to the user's question.
+
+User Question: %s
+
+Requirements:
+1. Answer based on the actually retrieved content
+2. Clearly cite information sources (chunk_id, document name)
+3. Organize the answer in a structured manner
+4. If the information is insufficient, state it honestly
+
+Now please generate the final answer:
+Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying.`, query)
 
 	messages = append(messages, chat.Message{
 		Role:    "user",

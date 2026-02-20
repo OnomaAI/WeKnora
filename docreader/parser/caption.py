@@ -183,7 +183,9 @@ class Caption:
         """
         logger.info("Initializing Caption service")
         # Default prompt for image captioning in Chinese: "Briefly describe the main content of the image"
-        self.prompt = """简单凝炼的描述图片的主要内容"""
+        # self.prompt = """简单凝炼的描述图片的主要内容"""
+        self.prompt = "Briefly describe the main content of the image. Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying."
+
         # API request timeout in seconds
         self.timeout = 30
 
@@ -254,7 +256,8 @@ class Caption:
             # Prompt: "Briefly describe the main content of the image"
             response = client.generate(
                 model=self.model,
-                prompt="简单凝炼的描述图片的主要内容",
+                # prompt="简单凝炼的描述图片的主要内容",
+                prompt="Briefly describe the main content of the image. Always respond in Korean. If the answer is not in Korean, translate it into Korean before replying.",
                 images=[image_base64],  # Pass base64 encoded image data
                 options={
                     "temperature": 0.1
