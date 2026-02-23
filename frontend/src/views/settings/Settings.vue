@@ -3,7 +3,8 @@
     <Transition name="modal">
       <div v-if="visible" class="settings-overlay">
         <div class="settings-modal">
-          <!-- 关闭按钮 -->
+          <!-- 원문: 关闭按钮 -->
+          <!-- 닫기 버튼 -->
           <button class="close-btn" @click="handleClose" :aria-label="$t('general.close')">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -11,7 +12,8 @@
           </button>
 
           <div class="settings-container">
-            <!-- 左侧导航 -->
+            <!-- 원문: 左侧导航 -->
+            <!-- 왼쪽 탐색 메뉴 -->
             <div class="settings-sidebar">
               <div class="sidebar-header">
                 <h2 class="sidebar-title">{{ $t('general.settings') }}</h2>
@@ -26,7 +28,8 @@
                     }]"
                     @click="handleNavClick(item)"
                   >
-                    <!-- 网络搜索使用自定义 SVG 图标 -->
+                    <!-- 원문: 网络搜索使用自定义 SVG 图标 -->
+                    <!-- 웹 검색은 사용자 정의 SVG 아이콘 사용 -->
                     <svg 
                       v-if="item.key === 'websearch'"
                       width="18" 
@@ -51,7 +54,8 @@
                     />
                   </div>
                   
-                  <!-- 子菜单 -->
+                  <!-- 원문: 子菜单 -->
+                  <!-- 하위 메뉴 -->
                   <Transition name="submenu">
                     <div 
                       v-if="item.children && expandedMenus.includes(item.key)" 
@@ -71,45 +75,54 @@
               </div>
             </div>
 
-            <!-- 右侧内容区域 -->
+            <!-- 원문: 右侧内容区域 -->
+            <!-- 오른쪽 콘텐츠 영역 -->
             <div class="settings-content">
               <div class="content-wrapper">
-                <!-- 常规设置 -->
+                <!-- 원문: 常规设置 -->
+                <!-- 일반 설정 -->
                 <div v-if="currentSection === 'general'" class="section">
                   <GeneralSettings />
                 </div>
 
-                <!-- 模型配置 -->
+                <!-- 원문: 模型配置 -->
+                <!-- 모델 설정 -->
                 <div v-if="currentSection === 'models'" class="section">
                   <ModelSettings />
                 </div>
 
-                <!-- Ollama 设置 -->
+                <!-- 원문: Ollama 设置 -->
+                <!-- Ollama 설정 -->
                 <div v-if="currentSection === 'ollama'" class="section">
                   <OllamaSettings />
                 </div>
 
-                <!-- 网络搜索配置 -->
+                <!-- 원문: 网络搜索配置 -->
+                <!-- 웹 검색 설정 -->
                 <div v-if="currentSection === 'websearch'" class="section">
                   <WebSearchSettings />
                 </div>
 
-                <!-- 系统信息 -->
+                <!-- 원문: 系统信息 -->
+                <!-- 시스템 정보 -->
                 <div v-if="currentSection === 'system'" class="section">
                   <SystemInfo />
                 </div>
 
-                <!-- 租户信息 -->
+                <!-- 원문: 租户信息 -->
+                <!-- 테넌트 정보 -->
                 <div v-if="currentSection === 'tenant'" class="section">
                   <TenantInfo />
                 </div>
 
-                <!-- API 信息 -->
+                <!-- 원문: API 信息 -->
+                <!-- API 정보 -->
                 <div v-if="currentSection === 'api'" class="section">
                   <ApiInfo />
                 </div>
 
-                <!-- MCP 服务 -->
+                <!-- 원문: MCP 服务 -->
+                <!-- MCP 서비스 -->
                 <div v-if="currentSection === 'mcp'" class="section">
                   <McpSettings />
                 </div>
@@ -166,10 +179,12 @@ const navItems = computed(() => [
   { key: 'api', icon: 'secured', label: t('settings.apiInfo') }
 ])
 
-// 导航项点击处理
+// 원문: 导航项点击处理
+// 탐색 항목 클릭 처리
 const handleNavClick = (item: any) => {
   if (item.children && item.children.length > 0) {
-    // 有子菜单，切换展开状态
+    // 원문: 有子菜单，切换展开状态
+    // 하위 메뉴가 있으면 펼침 상태를 전환
     const index = expandedMenus.value.indexOf(item.key)
     if (index > -1) {
       expandedMenus.value.splice(index, 1)
@@ -181,16 +196,19 @@ const handleNavClick = (item: any) => {
     currentSubSection.value = ''
   }
   
-  // 切换到对应页面
+  // 원문: 切换到对应页面
+  // 해당 페이지로 전환
   currentSection.value = item.key
 }
 
-// 子菜单点击处理
+// 원문: 子菜单点击处理
+// 하위 메뉴 클릭 처리
 const handleSubMenuClick = (parentKey: string, childKey: string) => {
   currentSection.value = parentKey
   currentSubSection.value = childKey
   
-  // 滚动到对应的模型类型区域
+  // 원문: 滚动到对应的模型类型区域
+  // 해당 모델 유형 영역으로 스크롤
   setTimeout(() => {
     const element = document.querySelector(`[data-model-type="${childKey}"]`)
     if (element) {
@@ -199,21 +217,25 @@ const handleSubMenuClick = (parentKey: string, childKey: string) => {
   }, 100)
 }
 
-// 控制弹窗显示
+// 원문: 控制弹窗显示
+// 모달 표시 제어
 const visible = computed(() => {
   return route.path === '/platform/settings' || uiStore.showSettingsModal
 })
 
-// 关闭弹窗
+// 원문: 关闭弹窗
+// 모달 닫기
 const handleClose = () => {
   uiStore.closeSettings()
-  // 如果当前路由是设置页，返回上一页
+  // 원문: 如果当前路由是设置页，返回上一页
+  // 현재 라우트가 설정 페이지면 이전 페이지로 이동
   if (route.path === '/platform/settings') {
     router.back()
   }
 }
 
-// 监听初始导航设置
+// 원문: 监听初始导航设置
+// 초기 탐색 설정 감시
 watch(() => uiStore.settingsInitialSection, (section) => {
   if (section && visible.value) {
     currentSection.value = section
@@ -237,25 +259,29 @@ watch(() => uiStore.settingsInitialSection, (section) => {
   }
 }, { immediate: true })
 
-// ESC 键关闭
+// 원문: ESC 键关闭
+// ESC 키로 닫기
 const handleEscape = (e: KeyboardEvent) => {
   if (e.key === 'Escape' && visible.value) {
     handleClose()
   }
 }
 
-// 处理快捷导航事件
+// 원문: 处理快捷导航事件
+// 빠른 탐색 이벤트 처리
 const handleSettingsNav = (e: CustomEvent) => {
   const { section, subsection } = e.detail
   if (section) {
     currentSection.value = section
-    // 如果有子菜单，自动展开
+    // 원문: 如果有子菜单，自动展开
+    // 하위 메뉴가 있으면 자동으로 펼침
     const navItem = (navItems.value as any[]).find((item: any) => item.key === section)
     if (navItem && navItem.children && navItem.children.length > 0) {
       if (!expandedMenus.value.includes(section)) {
         expandedMenus.value.push(section)
       }
-      // 如果有 subsection，选中对应的子菜单项
+      // 원문: 如果有 subsection，选中对应的子菜单项
+      // subsection 이 있으면 해당 하위 메뉴 항목 선택
       currentSubSection.value = subsection || navItem.children[0].key
     }
   }
@@ -273,7 +299,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
-/* 遮罩层 */
+/* 원문: 遮罩层 */
+/* 오버레이 레이어 */
 .settings-overlay {
   position: fixed;
   inset: 0;
@@ -286,7 +313,8 @@ onUnmounted(() => {
   backdrop-filter: blur(4px);
 }
 
-/* 弹窗容器 */
+/* 원문: 弹窗容器 */
+/* 모달 컨테이너 */
 .settings-modal {
   position: relative;
   width: 100%;
@@ -300,7 +328,8 @@ onUnmounted(() => {
   flex-direction: column;
 }
 
-/* 关闭按钮 */
+/* 원문: 关闭按钮 */
+/* 닫기 버튼 */
 .close-btn {
   position: absolute;
   top: 16px;
@@ -331,7 +360,8 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-/* 左侧导航栏 */
+/* 원문: 左侧导航栏 */
+/* 왼쪽 탐색 사이드바 */
 .settings-sidebar {
   width: 220px;
   background-color: #f8f9fa;
@@ -403,7 +433,8 @@ onUnmounted(() => {
   transition: transform 0.2s ease;
 }
 
-/* 子菜单 */
+/* 원문: 子菜单 */
+/* 하위 메뉴 */
 .submenu {
   margin-left: 32px;
   margin-bottom: 4px;
@@ -436,7 +467,8 @@ onUnmounted(() => {
   display: block;
 }
 
-/* 子菜单动画 */
+/* 원문: 子菜单动画 */
+/* 하위 메뉴 애니메이션 */
 .submenu-enter-active,
 .submenu-leave-active {
   transition: all 0.2s ease;
@@ -462,7 +494,8 @@ onUnmounted(() => {
   max-height: 0;
 }
 
-/* 右侧内容区域 */
+/* 원문: 右侧内容区域 */
+/* 오른쪽 콘텐츠 영역 */
 .settings-content {
   flex: 1;
   overflow-y: auto;
@@ -489,7 +522,8 @@ onUnmounted(() => {
   }
 }
 
-/* 弹窗动画 */
+/* 원문: 弹窗动画 */
+/* 모달 애니메이션 */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.2s ease;
@@ -511,7 +545,8 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-/* 滚动条样式 */
+/* 원문: 滚动条样式 */
+/* 스크롤바 스타일 */
 .settings-sidebar::-webkit-scrollbar,
 .settings-content::-webkit-scrollbar {
   width: 6px;
@@ -543,4 +578,3 @@ onUnmounted(() => {
   background: #b0b0b0;
 }
 </style>
-

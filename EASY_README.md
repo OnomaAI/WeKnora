@@ -78,7 +78,7 @@ docker compose --profile minio up -d minio
 
 ### Step 4. WeKnora 핵심 서비스 기동
 ```bash
-docker compose up -d postgres redis docreader app frontend
+docker compose up -d neo4j postgres redis docreader app frontend
 
 # frontend(web ui) port 변경
 FRONTEND_PORT=[PORT] docker compose up -d --no-deps --force-recreate frontend

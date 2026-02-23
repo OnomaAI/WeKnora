@@ -284,7 +284,7 @@ const delCard = (index: number, item: any) => {
                 total.value--;
             }
         } else {
-            MessagePlugin.error("删除失败，请稍后再试!");
+            MessagePlugin.error(/* 원문: 删除失败，请稍后再试! */ "삭제에 실패했습니다. 잠시 후 다시 시도해 주세요!");
         }
     })
 }
@@ -324,7 +324,7 @@ const getMessageList = async (isLoadMore = false) => {
             // Display all sessions globally without filtering
             res.data.forEach((item: any) => {
                 let obj = { 
-                    title: item.title ? item.title : "新会话", 
+                    title: item.title ? item.title : /* 원문: 新会话 */ "새 대화", 
                     path: `chat/${item.id}`, 
                     id: item.id, 
                     isMore: false, 
@@ -499,11 +499,11 @@ const gotopage = async (path: string) => {
             await logoutApi();
         } catch (error) {
             // 即使API调用失败，也继续执行本地清理
-            console.error('注销API调用失败:', error);
+            console.error('로그아웃 API 호출 실패:', error);
         }
         // 清理所有状态和本地存储
         authStore.logout();
-        MessagePlugin.success('已退出登录');
+        MessagePlugin.success('로그아웃되었습니다');
         router.push('/login');
         return;
     } else {

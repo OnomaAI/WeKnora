@@ -117,14 +117,14 @@ let docSearchDebounce: ReturnType<typeof setTimeout> | null = null;
 const docSearchKeyword = ref('');
 const selectedFileType = ref('');
 const fileTypeOptions = computed(() => [
-  { content: t('knowledgeBase.allFileTypes') || '全部类型', value: '' },
+  { content: t('knowledgeBase.allFileTypes') || /* 원문: 全部类型 */ '모든 형식', value: '' },
   { content: 'PDF', value: 'pdf' },
   { content: 'DOCX', value: 'docx' },
   { content: 'DOC', value: 'doc' },
   { content: 'TXT', value: 'txt' },
   { content: 'MD', value: 'md' },
   { content: 'URL', value: 'url' },
-  { content: t('knowledgeBase.typeManual') || '手动创建', value: 'manual' },
+  { content: t('knowledgeBase.typeManual') || /* 원문: 手动创建 */ '수동 생성', value: 'manual' },
 ]);
 type TagInputInstance = ComponentPublicInstance<{ focus: () => void; select: () => void }>;
 const tagDropdownOptions = computed(() =>
@@ -201,7 +201,7 @@ const getKnowledgeType = (item: any) => {
     return t('knowledgeBase.typeURL') || 'URL';
   }
   if (item.type === 'manual') {
-    return t('knowledgeBase.typeManual') || '手动创建';
+    return t('knowledgeBase.typeManual') || /* 원문: 手动创建 */ '수동 생성';
   }
   if (item.file_type) {
     return item.file_type.toUpperCase();
@@ -426,7 +426,7 @@ const handleKnowledgeTagChange = async (knowledgeId: string, tagValue: string) =
     // Pass the tag value directly (empty string means no tag)
     const tagIdToUpdate = tagValue || null;
     await updateKnowledgeTagBatch({ updates: { [knowledgeId]: tagIdToUpdate } });
-    MessagePlugin.success(t('knowledgeBase.tagUpdateSuccess') || '分类已更新');
+    MessagePlugin.success(t('knowledgeBase.tagUpdateSuccess') || /* 원문: 分类已更新 */ '분류가 업데이트되었습니다');
     loadKnowledgeFiles(kbId.value);
     loadTags(kbId.value);
   } catch (error: any) {
@@ -545,9 +545,9 @@ watch(selectedFileType, (newVal, oldVal) => {
 // 监听文件上传事件
 const handleFileUploaded = (event: CustomEvent) => {
   const uploadedKbId = event.detail.kbId;
-  console.log('接收到文件上传事件，上传的知识库ID:', uploadedKbId, '当前知识库ID:', kbId.value);
+  console.log('파일 업로드 이벤트 수신, 업로드 지식 베이스 ID:', uploadedKbId, '현재 지식 베이스 ID:', kbId.value);
   if (uploadedKbId && uploadedKbId === kbId.value && !isFAQ.value) {
-    console.log('匹配当前知识库，开始刷新文件列表');
+    console.log('현재 지식 베이스와 일치하여 파일 목록 새로고침 시작');
     // 如果上传的文件属于当前知识库，使用 loadKnowledgeFiles 刷新文件列表
     loadKnowledgeFiles(uploadedKbId);
     loadTags(uploadedKbId);
@@ -558,7 +558,7 @@ const handleFileUploaded = (event: CustomEvent) => {
 // 监听从菜单触发的URL导入事件
 const handleOpenURLImportDialog = (event: CustomEvent) => {
   const eventKbId = event.detail.kbId;
-  console.log('接收到URL导入对话框打开事件，知识库ID:', eventKbId, '当前知识库ID:', kbId.value);
+  console.log('URL 가져오기 대화상자 열기 이벤트 수신, 지식 베이스 ID:', eventKbId, '현재 지식 베이스 ID:', kbId.value);
   if (eventKbId && eventKbId === kbId.value && !isFAQ.value) {
     urlDialogVisible.value = true;
   }
@@ -738,7 +738,7 @@ const handleDocumentActionSelect = (data: { value: string }) => {
 
 const ensureDocumentKbReady = () => {
   if (isFAQ.value) {
-    MessagePlugin.warning('当前知识库类型不支持该操作');
+    MessagePlugin.warning('현재 지식 베이스 유형에서는 이 작업을 지원하지 않습니다');
     return false;
   }
   if (!kbId.value) {
@@ -775,7 +775,7 @@ const handleDocumentUpload = async (event: Event) => {
   if (!files || files.length === 0) return;
   
   if (!kbId.value) {
-    MessagePlugin.error("缺少知识库ID");
+    MessagePlugin.error("지식 베이스 ID가 없습니다");
     resetUploadInput();
     return;
   }
@@ -799,7 +799,7 @@ const handleDocumentUpload = async (event: Event) => {
   let failCount = 0;
   const totalCount = validFiles.length;
 
-  // 获取当前选中的分类ID（如果不是"未分类"则传递）
+  // 현재 선택된 분류 ID를 가져옴("미분류"가 아니면 전달, 원문: "未分类")
   const tagIdToUpload = selectedTagId.value !== '__untagged__' ? selectedTagId.value : undefined;
 
   for (const file of validFiles) {
@@ -810,14 +810,14 @@ const handleDocumentUpload = async (event: Event) => {
         successCount++;
       } else {
         failCount++;
-        let errorMessage = "上传失败！";
+        let errorMessage = "업로드에 실패했습니다!";
         if (responseData?.error?.message) {
           errorMessage = responseData.error.message;
         } else if (responseData?.message) {
           errorMessage = responseData.message;
         }
         if (responseData?.code === 'duplicate_file' || responseData?.error?.code === 'duplicate_file') {
-          errorMessage = "文件已存在";
+          errorMessage = "파일이 이미 존재합니다";
         }
         if (totalCount === 1) {
           MessagePlugin.error(errorMessage);
@@ -825,9 +825,9 @@ const handleDocumentUpload = async (event: Event) => {
       }
     } catch (error: any) {
       failCount++;
-      let errorMessage = error?.error?.message || error?.message || "上传失败！";
+      let errorMessage = error?.error?.message || error?.message || "업로드에 실패했습니다!";
       if (error?.code === 'duplicate_file') {
-        errorMessage = "文件已存在";
+        errorMessage = "파일이 이미 존재합니다";
       }
       if (totalCount === 1) {
         MessagePlugin.error(errorMessage);
@@ -844,15 +844,15 @@ const handleDocumentUpload = async (event: Event) => {
 
   if (totalCount === 1) {
     if (successCount === 1) {
-      MessagePlugin.success("上传成功！");
+      MessagePlugin.success("업로드 성공!");
     }
   } else {
     if (failCount === 0) {
-      MessagePlugin.success(`所有文件上传成功（${successCount}个）`);
+      MessagePlugin.success(`모든 파일 업로드 성공 (${successCount}개)`);
     } else if (successCount > 0) {
-      MessagePlugin.warning(`部分文件上传成功（成功：${successCount}，失败：${failCount}）`);
+      MessagePlugin.warning(`일부 파일 업로드 성공 (성공: ${successCount}, 실패: ${failCount})`);
     } else {
-      MessagePlugin.error(`所有文件上传失败（${failCount}个）`);
+      MessagePlugin.error(`모든 파일 업로드 실패 (${failCount}개)`);
     }
   }
 
@@ -866,7 +866,7 @@ const handleFolderUpload = async (event: Event) => {
   if (!files || files.length === 0) return;
 
   if (!kbId.value) {
-    MessagePlugin.error("缺少知识库ID");
+    MessagePlugin.error("지식 베이스 ID가 없습니다");
     if (input) input.value = '';
     return;
   }
@@ -985,7 +985,7 @@ const handleURLImportCancel = () => {
 const handleURLImportConfirm = async () => {
   const url = urlInputValue.value.trim();
   if (!url) {
-    MessagePlugin.warning(t('knowledgeBase.urlRequired') || '请输入URL');
+    MessagePlugin.warning(t('knowledgeBase.urlRequired') || /* 원문: 请输入URL */ 'URL을 입력해 주세요');
     return;
   }
   
@@ -993,12 +993,12 @@ const handleURLImportConfirm = async () => {
   try {
     new URL(url);
   } catch (error) {
-    MessagePlugin.warning(t('knowledgeBase.invalidURL') || '请输入有效的URL');
+    MessagePlugin.warning(t('knowledgeBase.invalidURL') || /* 원문: 请输入有效的URL */ '유효한 URL을 입력해 주세요');
     return;
   }
 
   if (!kbId.value) {
-    MessagePlugin.error("缺少知识库ID");
+    MessagePlugin.error("지식 베이스 ID가 없습니다");
     return;
   }
 
@@ -1012,25 +1012,25 @@ const handleURLImportConfirm = async () => {
     }));
     const isSuccess = responseData?.success || responseData?.code === 200 || responseData?.status === 'success' || (!responseData?.error && responseData);
     if (isSuccess) {
-      MessagePlugin.success(t('knowledgeBase.urlImportSuccess') || 'URL导入成功！');
+      MessagePlugin.success(t('knowledgeBase.urlImportSuccess') || /* 원문: URL导入成功！ */ 'URL 가져오기에 성공했습니다!');
       urlDialogVisible.value = false;
       urlInputValue.value = '';
     } else {
-      let errorMessage = t('knowledgeBase.urlImportFailed') || "URL导入失败！";
+      let errorMessage = t('knowledgeBase.urlImportFailed') || "URL 가져오기에 실패했습니다!";
       if (responseData?.error?.message) {
         errorMessage = responseData.error.message;
       } else if (responseData?.message) {
         errorMessage = responseData.message;
       }
       if (responseData?.code === 'duplicate_url' || responseData?.error?.code === 'duplicate_url') {
-        errorMessage = t('knowledgeBase.urlExists') || "该URL已存在";
+        errorMessage = t('knowledgeBase.urlExists') || "해당 URL이 이미 존재합니다";
       }
       MessagePlugin.error(errorMessage);
     }
   } catch (error: any) {
-    let errorMessage = error?.error?.message || error?.message || t('knowledgeBase.urlImportFailed') || "URL导入失败！";
+    let errorMessage = error?.error?.message || error?.message || t('knowledgeBase.urlImportFailed') || "URL 가져오기에 실패했습니다!";
     if (error?.code === 'duplicate_url') {
-      errorMessage = t('knowledgeBase.urlExists') || "该URL已存在";
+      errorMessage = t('knowledgeBase.urlExists') || "해당 URL이 이미 존재합니다";
     }
     MessagePlugin.error(errorMessage);
   } finally {
@@ -1578,7 +1578,7 @@ async function createNewSession(value: string): Promise<void> {
                         </div>
                         <div class="card-popover-extra">
                           <span v-if="(hoveredCardItem as any).created_at" class="card-popover-created">
-                            {{ t('knowledgeBase.createdAt') || '创建' }}：{{ formatDocTime((hoveredCardItem as any).created_at) }}
+                            {{ t('knowledgeBase.createdAt') || /* 원문: 创建 */ '생성' }}：{{ formatDocTime((hoveredCardItem as any).created_at) }}
                           </span>
                           <span v-if="formatFileSize((hoveredCardItem as any).file_size)" class="card-popover-size">
                             {{ formatFileSize((hoveredCardItem as any).file_size) }}
@@ -1586,11 +1586,11 @@ async function createNewSession(value: string): Promise<void> {
                         </div>
                       </template>
                       <div class="card-popover-meta">
-                        <span class="card-popover-time">{{ t('knowledgeBase.updatedAt') || '更新' }}：{{ formatDocTime(hoveredCardItem.updated_at) }}</span>
+                        <span class="card-popover-time">{{ t('knowledgeBase.updatedAt') || /* 원문: 更新 */ '업데이트' }}：{{ formatDocTime(hoveredCardItem.updated_at) }}</span>
                         <span v-if="getTagName(hoveredCardItem.tag_id)" class="card-popover-tag">{{ getTagName(hoveredCardItem.tag_id) }}</span>
                         <span class="card-popover-type">{{ getKnowledgeType(hoveredCardItem) }}</span>
                       </div>
-                      <div class="card-popover-hint">{{ t('knowledgeBase.clickToViewFull') || '点击卡片查看全文与分段' }}</div>
+                      <div class="card-popover-hint">{{ t('knowledgeBase.clickToViewFull') || /* 원문: 点击卡片查看全文与分段 */ '카드를 클릭해 전체 내용과 분할 내용을 확인하세요' }}</div>
                     </template>
                   </div>
                 </Teleport>
@@ -1629,27 +1629,27 @@ async function createNewSession(value: string): Promise<void> {
           <!-- URL 导入对话框 -->
           <t-dialog
             v-model:visible="urlDialogVisible"
-            :header="$t('knowledgeBase.importURLTitle') || '导入网页'"
+            :header="$t('knowledgeBase.importURLTitle') || /* 원문: 导入网页 */ '웹페이지 가져오기'"
             :confirm-btn="{
-              content: $t('common.confirm') || '确认',
+              content: $t('common.confirm') || /* 원문: 确认 */ '확인',
               theme: 'primary',
               loading: urlImporting,
             }"
-            :cancel-btn="{ content: $t('common.cancel') || '取消' }"
+            :cancel-btn="{ content: $t('common.cancel') || /* 원문: 取消 */ '취소' }"
             @confirm="handleURLImportConfirm"
             @cancel="handleURLImportCancel"
             width="500px"
           >
             <div class="url-import-form">
-              <div class="url-input-label">{{ $t('knowledgeBase.urlLabel') || 'URL地址' }}</div>
+              <div class="url-input-label">{{ $t('knowledgeBase.urlLabel') || /* 원문: URL地址 */ 'URL 주소' }}</div>
               <t-input
                 v-model="urlInputValue"
-                :placeholder="$t('knowledgeBase.urlPlaceholder') || '请输入网页URL，例如：https://example.com'"
+                :placeholder="$t('knowledgeBase.urlPlaceholder') || /* 원문: 请输入网页URL，例如：https://example.com */ '웹페이지 URL을 입력해 주세요. 예: https://example.com'"
                 clearable
                 autofocus
                 @keydown.enter="handleURLImportConfirm"
               />
-              <div class="url-input-tip">{{ $t('knowledgeBase.urlTip') || '支持导入各类网页内容，系统会自动提取和解析网页中的文本内容' }}</div>
+              <div class="url-input-tip">{{ $t('knowledgeBase.urlTip') || /* 원문: 支持导入各类网页内容，系统会自动提取和解析网页中的文本内容 */ '다양한 웹페이지 내용을 가져올 수 있으며, 시스템이 웹페이지 텍스트를 자동 추출 및 파싱합니다' }}</div>
             </div>
           </t-dialog>
           

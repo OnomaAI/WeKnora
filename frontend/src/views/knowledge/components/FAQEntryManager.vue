@@ -84,7 +84,8 @@
           <div class="import-result-header">
             <div class="header-left">
               <t-icon name="check-circle-filled" size="20px" class="result-icon" />
-              <span class="result-title">最近导入结果</span>
+              <!-- 원문: 最近导入结果 -->
+              <span class="result-title">최근 가져오기 결과</span>
             </div>
             <div class="header-right">
               <span class="result-time">{{ formatImportTime(importResult.imported_at) }}</span>
@@ -102,16 +103,19 @@
           <div class="import-result-body">
             <div class="import-result-stats">
               <div class="stat-item">
-                <span class="stat-label">导入数据</span>
-                <span class="stat-value">{{ importResult.total_entries }}条</span>
+                <!-- 원문: 导入数据 -->
+                <span class="stat-label">가져온 항목</span>
+                <span class="stat-value">{{ importResult.total_entries }}건</span>
               </div>
               <div class="stat-item success">
-                <span class="stat-label">成功</span>
-                <span class="stat-value">{{ importResult.success_count }}条</span>
+                <!-- 원문: 成功 -->
+                <span class="stat-label">성공</span>
+                <span class="stat-value">{{ importResult.success_count }}건</span>
               </div>
               <div v-if="importResult.failed_count > 0" class="stat-item failed">
-                <span class="stat-label">失败</span>
-                <span class="stat-value">{{ importResult.failed_count }}条</span>
+                <!-- 원문: 失败 -->
+                <span class="stat-label">실패</span>
+                <span class="stat-value">{{ importResult.failed_count }}건</span>
                 <t-button
                   v-if="importResult.failed_entries_url"
                   variant="outline"
@@ -121,17 +125,19 @@
                   @click="downloadFailedEntries"
                 >
                   <t-icon name="download" size="14px" />
-                  下载原因
+                  <!-- 원문: 下载原因 -->
+                  실패 원인 다운로드
                 </t-button>
               </div>
               <div v-if="importResult.skipped_count > 0" class="stat-item skipped">
-                <span class="stat-label">跳过</span>
-                <span class="stat-value">{{ importResult.skipped_count }}条</span>
+                <!-- 원문: 跳过 -->
+                <span class="stat-label">건너뜀</span>
+                <span class="stat-value">{{ importResult.skipped_count }}건</span>
               </div>
             </div>
             <div class="import-mode-tag">
               <t-tag size="small" variant="light" theme="success">
-                {{ importResult.import_mode === 'append' ? '追加模式' : '替换模式' }}
+                {{ importResult.import_mode === 'append' ? /* 원문: 追加模式 */ '추가 모드' : /* 원문: 替换模式 */ '덮어쓰기 모드' }}
               </t-tag>
             </div>
           </div>
@@ -156,9 +162,9 @@
                 }"
               />
               <span class="progress-title">
-                {{ importState.taskStatus.status === 'running' ? '导入中...' : 
-                   importState.taskStatus.status === 'success' ? '导入完成' : 
-                   importState.taskStatus.status === 'failed' ? '导入失败' : '等待中...' }}
+                {{ importState.taskStatus.status === 'running' ? /* 원문: 导入中... */ '가져오는 중...' : 
+                   importState.taskStatus.status === 'success' ? /* 원문: 导入完成 */ '가져오기 완료' : 
+                   importState.taskStatus.status === 'failed' ? /* 원문: 导入失败 */ '가져오기 실패' : /* 원문: 等待中... */ '대기 중...' }}
               </span>
             </div>
             <div class="progress-right">
@@ -820,8 +826,8 @@
 
             <div class="setting-row vertical">
               <div class="setting-info">
-                <label>{{ $t('knowledgeBase.category') || '分类' }}</label>
-                <p class="desc">{{ $t('knowledgeEditor.faq.tagDesc') || '为 FAQ 条目选择分类' }}</p>
+                <label>{{ $t('knowledgeBase.category') || /* 원문: 分类 */ '분류' }}</label>
+                <p class="desc">{{ $t('knowledgeEditor.faq.tagDesc') || /* 원문: 为 FAQ 条目选择分类 */ 'FAQ 항목의 분류를 선택하세요' }}</p>
               </div>
               <div class="setting-control">
                 <t-select
@@ -829,7 +835,7 @@
                   class="full-width-input"
                   :options="tagSelectOptions"
                   clearable
-                  :placeholder="$t('knowledgeEditor.faq.tagPlaceholder') || '选择分类'"
+                  :placeholder="$t('knowledgeEditor.faq.tagPlaceholder') || /* 원문: 选择分类 */ '분류 선택'"
                 />
               </div>
             </div>
@@ -969,7 +975,7 @@
                   :disabled="importState.taskStatus?.status === 'running'"
                 >
                   {{ importState.taskStatus?.status === 'success' ? $t('common.close') : 
-                     importState.taskStatus?.status === 'failed' ? '重试' :
+                     importState.taskStatus?.status === 'failed' ? /* 원문: 重试 */ '다시 시도' :
                      $t('knowledgeEditor.faqImport.importButton') }}
                 </t-button>
               </div>
@@ -1634,8 +1640,8 @@ const loadTags = async (reset = false) => {
 }
 
 const getTagName = (tagId?: number) => {
-  if (!tagId) return t('knowledgeBase.untagged') || '未分类'
-  return tagMap.value[tagId]?.name || (t('knowledgeBase.untagged') || '未分类')
+  if (!tagId) return t('knowledgeBase.untagged') || /* 원문: 未分类 */ '미분류'
+  return tagMap.value[tagId]?.name || (t('knowledgeBase.untagged') || /* 원문: 未分类 */ '미분류')
 }
 
 const handleTagFilterChange = (value: number) => {
@@ -1835,7 +1841,7 @@ const handleFaqMenuAction = (event: Event) => {
   } else if (detail.action === 'batch') {
     // 批量操作通过左侧菜单的下拉菜单处理
     if (selectedRowKeys.value.length === 0) {
-      MessagePlugin.warning(t('knowledgeEditor.faq.selectEntriesFirst') || '请先选中要操作的FAQ条目')
+      MessagePlugin.warning(t('knowledgeEditor.faq.selectEntriesFirst') || /* 원문: 请先选中要操作的FAQ条目 */ '작업할 FAQ 항목을 먼저 선택하세요')
     }
   } else if (detail.action === 'batchTag') {
     if (canEdit.value && selectedRowKeys.value.length > 0) {
@@ -2239,7 +2245,7 @@ const handleMenuDelete = async (entry: FAQEntry) => {
 const openImportDialog = () => {
   // 如果正在导入，不允许打开导入对话框
   if (importState.taskStatus?.status === 'running') {
-    MessagePlugin.warning('导入正在进行中，请等待完成后再试')
+    MessagePlugin.warning(/* 원문: 导入正在进行中，请等待完成后再试 */ '가져오기가 진행 중입니다. 완료 후 다시 시도하세요')
     return
   }
   stopPolling()
@@ -2325,15 +2331,15 @@ const parseCSVFile = async (file: File): Promise<FAQEntryPayload[]> => {
               record[key] = String(row[key] || '').trim()
             })
             
-            const isDisabled = parseBooleanField(record['是否停用'], false)
+            const isDisabled = parseBooleanField(record['사용 중지 여부'] || /* 원문: 是否停用 */ record['\u662f\u5426\u505c\u7528'], false)
             payloads.push(
               normalizePayload({
-                standard_question: record['问题'] || record['standard_question'] || record['question'] || '',
-                answers: splitByDelimiter(record['机器人回答'] || record['answers']),
-                similar_questions: splitByDelimiter(record['相似问题'] || record['similar_questions']),
-                negative_questions: splitByDelimiter(record['反例问题'] || record['negative_questions']),
+                standard_question: record['질문'] || /* 원문: 问题 */ record['\u95ee\u9898'] || record['standard_question'] || record['question'] || '',
+                answers: splitByDelimiter(record['봇 답변'] || /* 원문: 机器人回答 */ record['\u673a\u5668\u4eba\u56de\u7b54'] || record['answers']),
+                similar_questions: splitByDelimiter(record['유사 질문'] || /* 원문: 相似问题 */ record['\u76f8\u4f3c\u95ee\u9898'] || record['similar_questions']),
+                negative_questions: splitByDelimiter(record['반례 질문'] || /* 원문: 反例问题 */ record['\u53cd\u4f8b\u95ee\u9898'] || record['negative_questions']),
                 tag_id: record['tag_id'] ? Number(record['tag_id']) : undefined,
-                tag_name: record['分类'] || record['tag_name'] || '',
+                tag_name: record['분류'] || /* 원문: 分类 */ record['\u5206\u7c7b'] || record['tag_name'] || '',
                 is_enabled: isDisabled !== undefined ? !isDisabled : undefined, // 是否停用：FALSE表示启用，TRUE表示停用，所以取反
               }),
             )
@@ -2344,7 +2350,7 @@ const parseCSVFile = async (file: File): Promise<FAQEntryPayload[]> => {
         }
       },
       error: (error: Error) => {
-        reject(new Error(`CSV解析失败: ${error.message}`))
+        reject(new Error(`CSV 파싱 실패: ${error.message}`))
       },
     })
   })
@@ -2373,14 +2379,14 @@ const parseExcelFile = async (file: File): Promise<FAQEntryPayload[]> => {
       normalizedRow[finalKey] = String(row[key] || '').trim()
     })
     
-    const isDisabled = parseBooleanField(normalizedRow['是否停用'], false)
+    const isDisabled = parseBooleanField(normalizedRow['사용 중지 여부'] || /* 원문: 是否停用 */ normalizedRow['\u662f\u5426\u505c\u7528'], false)
     return normalizePayload({
-      standard_question: normalizedRow['问题'] || normalizedRow['standard_question'] || normalizedRow['question'] || '',
-      answers: splitByDelimiter(normalizedRow['机器人回答'] || normalizedRow['answers']),
-      similar_questions: splitByDelimiter(normalizedRow['相似问题'] || normalizedRow['similar_questions']),
-      negative_questions: splitByDelimiter(normalizedRow['反例问题'] || normalizedRow['negative_questions']),
+      standard_question: normalizedRow['질문'] || /* 원문: 问题 */ normalizedRow['\u95ee\u9898'] || normalizedRow['standard_question'] || normalizedRow['question'] || '',
+      answers: splitByDelimiter(normalizedRow['봇 답변'] || /* 원문: 机器人回答 */ normalizedRow['\u673a\u5668\u4eba\u56de\u7b54'] || normalizedRow['answers']),
+      similar_questions: splitByDelimiter(normalizedRow['유사 질문'] || /* 원문: 相似问题 */ normalizedRow['\u76f8\u4f3c\u95ee\u9898'] || normalizedRow['similar_questions']),
+      negative_questions: splitByDelimiter(normalizedRow['반례 질문'] || /* 원문: 反例问题 */ normalizedRow['\u53cd\u4f8b\u95ee\u9898'] || normalizedRow['negative_questions']),
       tag_id: normalizedRow['tag_id'] ? Number(normalizedRow['tag_id']) : undefined,
-      tag_name: normalizedRow['分类'] || normalizedRow['tag_name'] || '',
+      tag_name: normalizedRow['분류'] || /* 원문: 分类 */ normalizedRow['\u5206\u7c7b'] || normalizedRow['tag_name'] || '',
       is_enabled: isDisabled !== undefined ? !isDisabled : undefined, // 是否停用：FALSE表示启用，TRUE表示停用，所以取反
     })
   })
@@ -2408,10 +2414,10 @@ const splitByDelimiter = (value?: string) => {
 const parseBooleanField = (value?: string, defaultValue: boolean = true): boolean | undefined => {
   if (!value) return undefined
   const normalized = value.trim().toUpperCase()
-  if (normalized === 'TRUE' || normalized === '1' || normalized === '是' || normalized === 'YES') {
+  if (normalized === 'TRUE' || normalized === '1' || /* 원문: 是 */ normalized === '\u662f' || normalized === 'YES' || normalized === '예'.toUpperCase()) {
     return true
   }
-  if (normalized === 'FALSE' || normalized === '0' || normalized === '否' || normalized === 'NO') {
+  if (normalized === 'FALSE' || normalized === '0' || /* 원문: 否 */ normalized === '\u5426' || normalized === 'NO' || normalized === '아니오'.toUpperCase()) {
     return false
   }
   return defaultValue
@@ -2702,7 +2708,7 @@ const closeImportResult = async () => {
 // 下载失败条目原因
 const downloadFailedEntries = () => {
   if (!importResult.value?.failed_entries_url) {
-    MessagePlugin.warning('暂无失败记录可下载')
+    MessagePlugin.warning(/* 원문: 暂无失败记录可下载 */ '다운로드할 실패 기록이 없습니다')
     return
   }
   // 直接打开下载链接
@@ -2810,18 +2816,18 @@ const downloadExampleOptions = computed(() => [
 // 示例数据
 const exampleData: FAQEntryPayload[] = [
   {
-    standard_question: '什么是 WeKnora？',
-    answers: ['WeKnora 是一个智能知识库管理系统', '它支持多种知识库类型和导入方式'],
-    similar_questions: ['WeKnora 是什么？', '介绍一下 WeKnora'],
-    negative_questions: ['这不是 WeKnora', '与 WeKnora 无关'],
-    tag_name: '产品介绍',
+    standard_question: 'WeKnora란 무엇인가요?',
+    answers: ['WeKnora는 지능형 지식 베이스 관리 시스템입니다', '다양한 지식 베이스 유형과 가져오기 방식을 지원합니다'],
+    similar_questions: ['WeKnora가 무엇인가요?', 'WeKnora를 소개해 주세요'],
+    negative_questions: ['이것은 WeKnora가 아닙니다', 'WeKnora와 관련이 없습니다'],
+    tag_name: '제품 소개',
   },
   {
-    standard_question: '如何创建知识库？',
-    answers: ['点击"新建知识库"按钮', '选择知识库类型并填写相关信息', '完成创建后即可开始使用'],
-    similar_questions: ['怎么创建知识库？', '如何新建知识库？'],
+    standard_question: '지식 베이스는 어떻게 생성하나요?',
+    answers: ['"새 지식 베이스" 버튼을 클릭합니다', '지식 베이스 유형을 선택하고 관련 정보를 입력합니다', '생성이 완료되면 바로 사용할 수 있습니다'],
+    similar_questions: ['지식 베이스는 어떻게 만드나요?', '새 지식 베이스는 어떻게 생성하나요?'],
     negative_questions: [],
-    tag_name: '使用指南',
+    tag_name: '사용 안내',
   },
 ]
 
@@ -2857,7 +2863,7 @@ const downloadJSONExample = () => {
 
 // 下载 CSV 示例
 const downloadCSVExample = () => {
-  const headers = ['分类(必填)', '问题(必填)', '相似问题(选填-多个用##分隔)', '反例问题(选填-多个用##分隔)', '机器人回答(必填-多个用##分隔)', '是否全部回复(选填-默认FALSE)', '是否停用(选填-默认FALSE)', '是否禁止被推荐(选填-默认False 可被推荐)']
+  const headers = ['분류(필수)', '질문(필수)', '유사 질문(선택-여러 개는 ##로 구분)', '반례 질문(선택-여러 개는 ##로 구분)', '봇 답변(필수-여러 개는 ##로 구분)', '전체 답변 여부(선택-기본값 FALSE)', '사용 중지 여부(선택-기본값 FALSE)', '추천 금지 여부(선택-기본값 FALSE, 기본은 추천 가능)']
   const rows = exampleData.map((item) => {
     return [
       item.tag_name || '', // 分类
@@ -2895,14 +2901,14 @@ const downloadCSVExample = () => {
 const downloadExcelExample = () => {
   const worksheet = XLSX.utils.json_to_sheet(
     exampleData.map((item) => ({
-      '分类(必填)': item.tag_name || '',
-      '问题(必填)': item.standard_question,
-      '相似问题(选填-多个用##分隔)': item.similar_questions.join('##'),
-      '反例问题(选填-多个用##分隔)': item.negative_questions.join('##'),
-      '机器人回答(必填-多个用##分隔)': item.answers.join('##'),
-      '是否全部回复(选填-默认FALSE)': 'FALSE',
-      '是否停用(选填-默认FALSE)': 'FALSE',
-      '是否禁止被推荐(选填-默认False 可被推荐)': 'FALSE',
+      '분류(필수)': item.tag_name || '',
+      '질문(필수)': item.standard_question,
+      '유사 질문(선택-여러 개는 ##로 구분)': item.similar_questions.join('##'),
+      '반례 질문(선택-여러 개는 ##로 구분)': item.negative_questions.join('##'),
+      '봇 답변(필수-여러 개는 ##로 구분)': item.answers.join('##'),
+      '전체 답변 여부(선택-기본값 FALSE)': 'FALSE',
+      '사용 중지 여부(선택-기본값 FALSE)': 'FALSE',
+      '추천 금지 여부(선택-기본값 FALSE, 기본은 추천 가능)': 'FALSE',
     })),
   )
   const workbook = XLSX.utils.book_new()
@@ -2914,7 +2920,7 @@ const downloadExcelExample = () => {
 const exportLoading = ref(false)
 const handleExportCSV = async () => {
   if (!props.kbId) {
-    MessagePlugin.warning(t('knowledgeBase.selectKnowledgeBase') || '请先选择知识库')
+    MessagePlugin.warning(t('knowledgeBase.selectKnowledgeBase') || /* 원문: 请先选择知识库 */ '먼저 지식 베이스를 선택하세요')
     return
   }
   
@@ -2929,10 +2935,10 @@ const handleExportCSV = async () => {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    MessagePlugin.success(t('knowledgeEditor.faqExport.exportSuccess') || '导出成功')
+    MessagePlugin.success(t('knowledgeEditor.faqExport.exportSuccess') || /* 원문: 导出成功 */ '내보내기에 성공했습니다')
   } catch (error: any) {
     console.error('Export failed:', error)
-    MessagePlugin.error(t('knowledgeEditor.faqExport.exportFailed') || '导出失败')
+    MessagePlugin.error(t('knowledgeEditor.faqExport.exportFailed') || /* 원문: 导出失败 */ '내보내기에 실패했습니다')
   } finally {
     exportLoading.value = false
   }
@@ -6335,6 +6341,3 @@ watch(() => entries.value.map(e => ({
   line-height: 1.4;
 }
 </style>
-
-
-

@@ -231,18 +231,18 @@ const uiStore = useUIStore();
 const { t } = useI18n();
 
 const TOOL_NAME_I18N: Record<string, string> = {
-  search_knowledge: '知识库检索',
-  knowledge_search: '知识库检索',
-  grep_chunks: '文本模式搜索',
-  web_search: '网络搜索',
-  web_fetch: '网页抓取',
-  get_document_info: '获取文档信息',
-  list_knowledge_chunks: '查看知识分块',
-  get_related_documents: '查找相关文档',
-  get_document_content: '获取文档内容',
-  todo_write: '计划管理',
-  knowledge_graph_extract: '知识图谱抽取',
-  thinking: '思考',
+  search_knowledge: /* 원문: 知识库检索 */ '지식 베이스 검색',
+  knowledge_search: /* 원문: 知识库检索 */ '지식 베이스 검색',
+  grep_chunks: /* 원문: 文本模式搜索 */ '텍스트 패턴 검색',
+  web_search: /* 원문: 网络搜索 */ '웹 검색',
+  web_fetch: /* 원문: 网页抓取 */ '웹페이지 가져오기',
+  get_document_info: /* 원문: 获取文档信息 */ '문서 정보 조회',
+  list_knowledge_chunks: /* 원문: 查看知识分块 */ '지식 청크 보기',
+  get_related_documents: /* 원문: 查找相关文档 */ '관련 문서 찾기',
+  get_document_content: /* 원문: 获取文档内容 */ '문서 내용 가져오기',
+  todo_write: /* 원문: 计划管理 */ '계획 관리',
+  knowledge_graph_extract: /* 원문: 知识图谱抽取 */ '지식 그래프 추출',
+  thinking: /* 원문: 思考 */ '사고',
 };
 
 const getLocalizedToolName = (toolName?: string | null): string => {
@@ -560,26 +560,26 @@ const intermediateStepsSummary = computed(() => {
   
   const parts: string[] = [];
   if (searchCount > 0) {
-    parts.push(`检索知识库 <strong>${searchCount}</strong> 次`);
+    parts.push(/* 원문: 检索知识库 <strong>${searchCount}</strong> 次 */ `지식 베이스 검색 <strong>${searchCount}</strong>회`);
   }
   if (thinkingCount > 0) {
-    parts.push(`思考 <strong>${thinkingCount}</strong> 次`);
+    parts.push(/* 원문: 思考 <strong>${thinkingCount}</strong> 次 */ `사고 <strong>${thinkingCount}</strong>회`);
   }
   if (toolCalls.length > 0) {
     const toolNames = toolCalls.map(name => {
-      if (name === 'get_document_info') return '获取文档';
-      if (name === 'list_knowledge_chunks') return '查看知识分块';
+      if (name === 'get_document_info') return /* 원문: 获取文档 */ '문서 조회';
+      if (name === 'list_knowledge_chunks') return /* 원문: 查看知识分块 */ '지식 청크 보기';
       return name;
     });
     if (toolNames.length === 1) {
-      parts.push(`调用 ${toolNames[0]}`);
+      parts.push(/* 원문: 调用 ${toolNames[0]} */ `호출: ${toolNames[0]}`);
     } else {
-      parts.push(`调用工具 ${toolNames.join('、')}`);
+      parts.push(/* 원문: 调用工具 ${toolNames.join('、')} */ `도구 호출: ${toolNames.join(', ')}`);
     }
   }
   
   if (parts.length === 0) {
-    return `<strong>${intermediateStepsCount.value}</strong> 个中间步骤`;
+    return /* 원문: <strong>${intermediateStepsCount.value}</strong> 个中间步骤 */ `<strong>${intermediateStepsCount.value}</strong>개의 중간 단계`;
   }
   
   // 优化连接词，使语句更流畅
@@ -796,7 +796,7 @@ const getKbTooltipInnerHtml = (state: KbTooltipState): string => {
   if (state.html) {
     return state.html;
   }
-  return `<span class="tip-loading">加载中...</span>`;
+  return `<span class="tip-loading">${/* 원문: 加载中... */ '로딩 중...'}</span>`;
 };
 
 const syncFloatPopupFromCache = (chunkId: string, state: KbTooltipState) => {
@@ -840,10 +840,10 @@ const loadChunkDetails = async (chunkId: string) => {
       return;
     }
 
-    setKbCacheState(chunkId, { loading: false, error: '未找到内容' });
+    setKbCacheState(chunkId, { loading: false, error: /* 원문: 未找到内容 */ '내용을 찾을 수 없습니다' });
   } catch (error: any) {
     console.error('Failed to load chunk details:', error);
-    const errorMsg = error?.message || '加载失败';
+    const errorMsg = error?.message || /* 원문: 加载失败 */ '불러오기에 실패했습니다';
     setKbCacheState(chunkId, { loading: false, error: errorMsg });
   }
 };
@@ -860,7 +860,7 @@ const updateKBCitationTooltip = (chunkId: string, state: KbTooltipState) => {
         tipElement.innerHTML = `
           <span class="t-popup__content">
             ${inner}
-            <span class="tip-meta">片段ID: ${shortChunkId}</span>
+            <span class="tip-meta">${/* 원문: 片段ID */ '청크 ID'}: ${shortChunkId}</span>
           </span>
         `;
       };
@@ -1141,7 +1141,7 @@ const preprocessMarkdown = (contentStr: string): string => {
         };
 
         const displayDoc = escapeHtml(truncateMiddle(doc));
-        return `<span class="citation citation-kb" data-kb-id="${safeKbId}" data-chunk-id="${safeChunkId}" data-doc="${safeDoc}" role="button" tabindex="0"><span class="citation-icon kb"></span><span class="citation-text">${displayDoc}</span><span class="citation-tip"><span class="t-popup__content"><span class="tip-loading">加载中...</span></span></span></span>`;
+        return `<span class="citation citation-kb" data-kb-id="${safeKbId}" data-chunk-id="${safeChunkId}" data-doc="${safeDoc}" role="button" tabindex="0"><span class="citation-icon kb"></span><span class="citation-text">${displayDoc}</span><span class="citation-tip"><span class="t-popup__content"><span class="tip-loading">로딩 중...</span></span></span></span>`;
       }
     );
 };
@@ -1201,12 +1201,12 @@ const getToolSummary = (event: any): string => {
     return '';
   } else if (toolName === 'get_document_info') {
     if (toolData?.title) {
-      return `获取文档：${toolData.title}`;
+      return `문서 조회: ${toolData.title}`;
     }
   } else if (toolName === 'list_knowledge_chunks') {
     if (toolData?.fetched_chunks !== undefined) {
-      const title = toolData?.knowledge_title || toolData?.knowledge_id || '文档';
-      return `查看 ${title} 的 ${toolData.fetched_chunks}/${toolData.total_chunks ?? '?'} 个分块`;
+      const title = toolData?.knowledge_title || toolData?.knowledge_id || /* 원문: 文档 */ '문서';
+      return `${title}의 ${toolData.fetched_chunks}/${toolData.total_chunks ?? '?'}개 청크 보기`;
     }
   } else if (toolName === 'todo_write') {
     // Extract steps from tool data
@@ -1217,15 +1217,15 @@ const getToolSummary = (event: any): string => {
       const completed = steps.filter((s: any) => s.status === 'completed').length;
       
       const parts = [];
-      if (inProgress > 0) parts.push(`🚀 进行中 ${inProgress}`);
-      if (pending > 0) parts.push(`📋 待处理 ${pending}`);
-      if (completed > 0) parts.push(`✅ 已完成 ${completed}`);
+      if (inProgress > 0) parts.push(`🚀 진행 중 ${inProgress}`);
+      if (pending > 0) parts.push(`📋 대기 ${pending}`);
+      if (completed > 0) parts.push(`✅ 완료 ${completed}`);
       
       return parts.join(' · ');
     }
   } else if (toolName === 'thinking') {
     // Return truthy value to trigger rendering, actual content rendered in template
-    return toolData?.thought ? '深度思考' : '';
+    return toolData?.thought ? /* 원문: 深度思考 */ '심층 사고' : '';
   }
   
   return '';
@@ -1258,7 +1258,7 @@ const getPlanStatusItems = (event: any) => {
     items.push({
       icon: 'play-circle-filled',
       class: 'in-progress',
-      label: '进行中',
+      label: /* 원문: 进行中 */ '진행 중',
       count: parts.inProgress
     });
   }
@@ -1267,7 +1267,7 @@ const getPlanStatusItems = (event: any) => {
     items.push({
       icon: 'time',
       class: 'pending',
-      label: '待处理',
+      label: /* 원문: 待处理 */ '대기',
       count: parts.pending
     });
   }
@@ -1276,7 +1276,7 @@ const getPlanStatusItems = (event: any) => {
     items.push({
       icon: 'check-circle-filled',
       class: 'completed',
-      label: '已完成',
+      label: /* 원문: 已完成 */ '완료',
       count: parts.completed
     });
   }
@@ -1288,9 +1288,9 @@ const getPlanStatusItems = (event: any) => {
 const getPlanStatusSummary = (event: any): string => {
   const parts = getPlanStatusParts(event);
   const textParts = [];
-  if (parts.inProgress > 0) textParts.push(`🚀 进行中 ${parts.inProgress}`);
-  if (parts.pending > 0) textParts.push(`📋 待处理 ${parts.pending}`);
-  if (parts.completed > 0) textParts.push(`✅ 已完成 ${parts.completed}`);
+  if (parts.inProgress > 0) textParts.push(`🚀 진행 중 ${parts.inProgress}`);
+  if (parts.pending > 0) textParts.push(`📋 대기 ${parts.pending}`);
+  if (parts.completed > 0) textParts.push(`✅ 완료 ${parts.completed}`);
   return textParts.length > 0 ? textParts.join(' · ') : '';
 };
 
@@ -1324,15 +1324,15 @@ const getSearchResultsSummary = (event: any): string => {
   
   const toolData = event.tool_data;
   const count = toolData.results?.length || toolData.count || 0;
-  if (count === 0) return `未找到匹配的内容`;
+  if (count === 0) return `일치하는 내용을 찾지 못했습니다`;
   
   // Build summary text
   let summary = '';
   const kbCount = toolData.kb_counts ? Object.keys(toolData.kb_counts).length : 0;
   if (kbCount > 0) {
-    summary = `找到 <strong>${count}</strong> 个结果，来自 <strong>${kbCount}</strong> 个文件`;
+    summary = `<strong>${count}</strong>개 결과를 찾았습니다. <strong>${kbCount}</strong>개 파일에서 검색되었습니다`;
   } else {
-    summary = `找到 <strong>${count}</strong> 个结果`;
+    summary = `<strong>${count}</strong>개 결과를 찾았습니다`;
   }
   return summary;
 };
@@ -1344,7 +1344,7 @@ const getWebSearchResultsSummary = (toolData: any): string => {
   const count = toolData.results?.length || toolData.count || 0;
   if (count === 0) return '';
   
-  return `找到 ${count} 个网络搜索结果`;
+  return `웹 검색 결과 ${count}개를 찾았습니다`;
 };
 
 // Get results count (number only) for web search summary
@@ -1361,12 +1361,12 @@ const getGrepResultsSummary = (toolData: any): string => {
   const resultCount = toolData.result_count || 0;
   
   if (totalMatches === 0) {
-    return '未找到匹配的内容';
+    return '일치하는 내용을 찾지 못했습니다';
   }
   
-  let summary = `找到 <strong>${totalMatches}</strong> 处匹配`;
+  let summary = `<strong>${totalMatches}</strong>개 일치를 찾았습니다`;
   if (totalMatches > resultCount) {
-    summary += `（显示 <strong>${resultCount}</strong> 个）`;
+    summary += ` (<strong>${resultCount}</strong>개 표시)`;
   }
   
   return summary;
@@ -1411,7 +1411,7 @@ const getQueryText = (args: any): string => {
 const getToolTitle = (event: any): string => {
   if (event.pending) {
     const localizedName = getLocalizedToolName(event.tool_name);
-    return `正在调用 ${localizedName}...`;
+    return `${localizedName} 호출 중...`;
   }
   
   const toolName = event.tool_name;
@@ -1496,25 +1496,25 @@ const getToolTitle = (event: any): string => {
 const getToolDescription = (event: any): string => {
   if (event.pending) {
     const localizedName = getLocalizedToolName(event.tool_name);
-    return `正在调用 ${localizedName}...`;
+    return `${localizedName} 호출 중...`;
   }
   
   const success = event.success === true;
   const toolName = event.tool_name;
   
   if (toolName === 'search_knowledge' || toolName === 'knowledge_search') {
-    return success ? '检索知识库' : '检索知识库失败';
+    return success ? '지식 베이스 검색' : '지식 베이스 검색 실패';
   } else if (toolName === 'web_search') {
-    return success ? '网络搜索' : '网络搜索失败';
+    return success ? '웹 검색' : '웹 검색 실패';
   } else if (toolName === 'get_document_info') {
-    return success ? '获取文档信息' : '获取文档信息失败';
+    return success ? '문서 정보 조회' : '문서 정보 조회 실패';
   } else if (toolName === 'thinking') {
-    return success ? '完成思考' : '思考失败';
+    return success ? '사고 완료' : '사고 실패';
   } else if (toolName === 'todo_write') {
-    return success ? '更新任务列表' : '更新任务列表失败';
+    return success ? '작업 목록 업데이트' : '작업 목록 업데이트 실패';
   } else {
     const localizedName = getLocalizedToolName(toolName);
-    return success ? `调用 ${localizedName}` : `调用 ${localizedName} 失败`;
+    return success ? `${localizedName} 호출` : `${localizedName} 호출 실패`;
   }
 };
 
@@ -1547,18 +1547,18 @@ const formatJSON = (obj: any): string => {
 };
 
 const buildManualMarkdown = (question: string, answer: string): string => {
-  const safeQuestion = question?.trim() || '（无提问内容）';
-  const safeAnswer = answer?.trim() || '（无回答内容）';
+  const safeQuestion = question?.trim() || /* 원문: （无提问内容） */ '(질문 내용 없음)';
+  const safeAnswer = answer?.trim() || /* 원문: （无回答内容） */ '(응답 내용 없음)';
   return `${safeAnswer}`;
 };
 
 const formatManualTitle = (question: string): string => {
   if (!question) {
-    return '会话摘录';
+    return '대화 발췌';
   }
   const condensed = question.replace(/\s+/g, ' ').trim();
   if (!condensed) {
-    return '会话摘录';
+    return '대화 발췌';
   }
   return condensed.length > 40 ? `${condensed.slice(0, 40)}...` : condensed;
 };
@@ -1587,7 +1587,7 @@ const getActualContent = (answerEvent: any): string => {
 const handleCopyAnswer = async (answerEvent: any) => {
   const content = getActualContent(answerEvent);
   if (!content) {
-    MessagePlugin.warning('当前回答为空，无法复制');
+    MessagePlugin.warning('현재 응답이 비어 있어 복사할 수 없습니다');
     return;
   }
 
@@ -1595,7 +1595,7 @@ const handleCopyAnswer = async (answerEvent: any) => {
     // 尝试使用现代 Clipboard API
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(content);
-      MessagePlugin.success('已复制到剪贴板');
+      MessagePlugin.success('클립보드에 복사되었습니다');
     } else {
       // 降级到传统方式
       const textArea = document.createElement('textarea');
@@ -1606,18 +1606,18 @@ const handleCopyAnswer = async (answerEvent: any) => {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      MessagePlugin.success('已复制到剪贴板');
+      MessagePlugin.success('클립보드에 복사되었습니다');
     }
   } catch (err) {
-    console.error('复制失败:', err);
-    MessagePlugin.error('复制失败，请手动复制');
+    console.error('복사 실패:', err);
+    MessagePlugin.error('복사에 실패했습니다. 수동으로 복사해 주세요');
   }
 };
 
 const handleAddToKnowledge = (answerEvent: any) => {
   const content = getActualContent(answerEvent);
   if (!content) {
-    MessagePlugin.warning('当前回答为空，无法保存到知识库');
+    MessagePlugin.warning('현재 응답이 비어 있어 지식 베이스에 저장할 수 없습니다');
     return;
   }
 
@@ -1632,7 +1632,7 @@ const handleAddToKnowledge = (answerEvent: any) => {
     status: 'draft',
   });
 
-  MessagePlugin.info('已打开编辑器，请选择知识库后保存');
+  MessagePlugin.info('편집기를 열었습니다. 지식 베이스를 선택한 뒤 저장해 주세요');
 };
 </script>
 

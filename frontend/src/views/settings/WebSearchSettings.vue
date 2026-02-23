@@ -6,7 +6,8 @@
     </div>
 
     <div class="settings-group">
-      <!-- 搜索引擎提供商 -->
+      <!-- 원문: 搜索引擎提供商 -->
+      <!-- 검색 엔진 제공자 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ t('webSearchSettings.providerLabel') }}</label>
@@ -38,7 +39,8 @@
         </div>
       </div>
 
-      <!-- API 密钥 -->
+      <!-- 원문: API 密钥 -->
+      <!-- API 키 -->
       <div v-if="selectedProvider && selectedProvider.requires_api_key" class="setting-row">
         <div class="setting-info">
           <label>{{ t('webSearchSettings.apiKeyLabel') }}</label>
@@ -56,7 +58,8 @@
         </div>
       </div>
 
-      <!-- 最大结果数 -->
+      <!-- 원문: 最大结果数 -->
+      <!-- 최대 결과 수 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ t('webSearchSettings.maxResultsLabel') }}</label>
@@ -78,7 +81,8 @@
         </div>
       </div>
 
-      <!-- 包含日期 -->
+      <!-- 원문: 包含日期 -->
+      <!-- 날짜 포함 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ t('webSearchSettings.includeDateLabel') }}</label>
@@ -92,7 +96,8 @@
         </div>
       </div>
 
-      <!-- 压缩方法 -->
+      <!-- 원문: 压缩方法 -->
+      <!-- 압축 방식 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ t('webSearchSettings.compressionLabel') }}</label>
@@ -114,7 +119,8 @@
         </div>
       </div>
 
-      <!-- 黑名单 -->
+      <!-- 원문: 黑名单 -->
+      <!-- 차단 목록 -->
       <div class="setting-row vertical">
         <div class="setting-info">
           <label>{{ t('webSearchSettings.blacklistLabel') }}</label>
@@ -142,7 +148,8 @@ import { getWebSearchProviders, getTenantWebSearchConfig, updateTenantWebSearchC
 
 const { t } = useI18n()
 
-// 本地状态
+// 원문: 本地状态
+// 로컬 상태
 const loadingProviders = ref(false)
 const providers = ref<WebSearchProviderConfig[]>([])
 const localProvider = ref<string>('')
@@ -151,29 +158,32 @@ const localMaxResults = ref<number>(5)
 const localIncludeDate = ref<boolean>(true)
 const localCompressionMethod = ref<string>('none')
 const localBlacklistText = ref<string>('')
-const isInitializing = ref(true) // 标记是否正在初始化，初始化期间不触发自动保存
-const initialConfig = ref<WebSearchConfig | null>(null) // 保存初始配置，用于比较是否有变化
+const isInitializing = ref(true) // 원문: 标记是否正在初始化，初始化期间不触发自动保存 // 초기화 중 여부 표시, 초기화 중에는 자동 저장 비활성화
+const initialConfig = ref<WebSearchConfig | null>(null) // 원문: 保存初始配置，用于比较是否有变化 // 초기 설정 저장, 변경 여부 비교에 사용
 
-// 计算属性：当前选中的提供商
+// 원문: 计算属性：当前选中的提供商
+// 계산 속성: 현재 선택된 제공자
 const selectedProvider = computed(() => {
   return providers.value.find(p => p.id === localProvider.value)
 })
 
-// 加载提供商列表
+// 원문: 加载提供商列表
+// 제공자 목록 로드
 const loadProviders = async () => {
   if (providers.value.length > 0) {
-    return // 已加载过
+    return // 원문: 已加载过 // 이미 로드됨
   }
   
   loadingProviders.value = true
   try {
     const response = await getWebSearchProviders()
-    // request拦截器已经处理了响应，直接使用data字段
+    // 원문: request拦截器已经处理了响应，直接使用data字段
+    // request 인터셉터에서 응답을 처리하므로 data 필드를 바로 사용
     if (response.data && Array.isArray(response.data)) {
       providers.value = response.data
     }
   } catch (error: any) {
-    console.error('Failed to load web search providers:', error)
+    console.error(/* 원문: Failed to load web search providers: */ '웹 검색 제공자 로드 실패:', error)
     const errorMessage = error?.message || t('webSearchSettings.errors.unknown')
     MessagePlugin.error(t('webSearchSettings.toasts.loadProvidersFailed', { message: errorMessage }))
   } finally {
@@ -181,17 +191,21 @@ const loadProviders = async () => {
   }
 }
 
-// 加载租户配置
+// 원문: 加载租户配置
+// 테넌트 설정 로드
 const loadTenantConfig = async () => {
   try {
     const response = await getTenantWebSearchConfig()
-    // request拦截器已经处理了响应，直接使用data字段
+    // 원문: request拦截器已经处理了响应，直接使用data字段
+    // request 인터셉터에서 응답을 처리하므로 data 필드를 바로 사용
     if (response.data) {
       const config = response.data
-      // 在设置初始值时，禁用自动保存
+      // 원문: 在设置初始值时，禁用自动保存
+      // 초기값 설정 시 자동 저장 비활성화
       isInitializing.value = true
       
-      // 保存初始配置的副本（用于后续比较）
+      // 원문: 保存初始配置的副本（用于后续比较）
+      // 초기 설정 복사본 저장(이후 비교용)
       const blacklist = (config.blacklist || []).join('\n')
       initialConfig.value = {
         provider: config.provider || '',
@@ -202,24 +216,29 @@ const loadTenantConfig = async () => {
         blacklist: config.blacklist || []
       }
       
-      // 设置本地状态值
+      // 원문: 设置本地状态值
+      // 로컬 상태값 설정
       localProvider.value = config.provider || ''
-      // API key 在响应中被隐藏，如果是 "***"，说明已配置但未返回实际值
+      // 원문: API key 在响应中被隐藏，如果是 "***"，说明已配置但未返回实际值
+      // 응답에서 API 키는 숨겨지며 "***"이면 설정은 되었지만 실제 값은 반환되지 않음
       localAPIKey.value = config.api_key === '***' ? '***' : config.api_key || ''
       localMaxResults.value = config.max_results || 5
       localIncludeDate.value = config.include_date !== undefined ? config.include_date : true
       localCompressionMethod.value = config.compression_method || 'none'
       localBlacklistText.value = blacklist
       
-      // 等待所有响应式更新完成后再启用自动保存
+      // 원문: 等待所有响应式更新完成后再启用自动保存
+      // 모든 반응형 업데이트가 끝난 후 자동 저장 재활성화
       await nextTick()
       await nextTick()
-      // 使用 setTimeout 确保所有事件都已处理完毕
+      // 원문: 使用 setTimeout 确保所有事件都已处理完毕
+      // setTimeout 으로 모든 이벤트 처리 완료 보장
       setTimeout(() => {
         isInitializing.value = false
       }, 100)
     } else {
-      // 如果没有配置数据，保存默认配置
+      // 원문: 如果没有配置数据，保存默认配置
+      // 설정 데이터가 없으면 기본 설정 저장
       initialConfig.value = {
         provider: '',
         api_key: '',
@@ -234,8 +253,9 @@ const loadTenantConfig = async () => {
       }, 100)
     }
   } catch (error: any) {
-    console.error('Failed to load tenant web search config:', error)
-    // 如果配置不存在，使用默认值（不显示错误）
+    console.error(/* 원문: Failed to load tenant web search config: */ '테넌트 웹 검색 설정 로드 실패:', error)
+    // 원문: 如果配置不存在，使用默认值（不显示错误）
+    // 설정이 없으면 기본값 사용(오류 메시지는 표시하지 않음)
     initialConfig.value = {
       provider: '',
       api_key: '',
@@ -251,10 +271,11 @@ const loadTenantConfig = async () => {
   }
 }
 
-// 检查配置是否有变化
+// 원문: 检查配置是否有变化
+// 설정 변경 여부 확인
 const hasConfigChanged = (): boolean => {
   if (!initialConfig.value) {
-    return true // 如果没有初始配置，认为有变化
+    return true // 원문: 如果没有初始配置，认为有变化 // 초기 설정이 없으면 변경된 것으로 판단
   }
   
   const blacklist = localBlacklistText.value
@@ -271,7 +292,8 @@ const hasConfigChanged = (): boolean => {
     blacklist: blacklist
   }
   
-  // 比较配置是否有变化（忽略 API key 的 '***' 占位符）
+  // 원문: 比较配置是否有变化（忽略 API key 的 '***' 占位符）
+  // 설정 변경 여부 비교(API 키 '***' 자리표시자는 무시)
   const initial = initialConfig.value
   if (currentConfig.provider !== initial.provider) return true
   if (currentConfig.api_key !== initial.api_key && 
@@ -280,7 +302,8 @@ const hasConfigChanged = (): boolean => {
   if (currentConfig.include_date !== initial.include_date) return true
   if (currentConfig.compression_method !== initial.compression_method) return true
   
-  // 比较黑名单数组
+  // 원문: 比较黑名单数组
+  // 차단 목록 배열 비교
   const currentBlacklist = blacklist.sort().join(',')
   const initialBlacklist = (initial.blacklist || []).sort().join(',')
   if (currentBlacklist !== initialBlacklist) return true
@@ -288,9 +311,11 @@ const hasConfigChanged = (): boolean => {
   return false
 }
 
-// 保存配置
+// 원문: 保存配置
+// 설정 저장
 const saveConfig = async () => {
-  // 如果配置没有变化，不保存
+  // 원문: 如果配置没有变化，不保存
+  // 설정이 변경되지 않았으면 저장하지 않음
   if (!hasConfigChanged()) {
     return
   }
@@ -312,7 +337,8 @@ const saveConfig = async () => {
     
     await updateTenantWebSearchConfig(config)
     
-    // 更新初始配置，避免重复保存
+    // 원문: 更新初始配置，避免重复保存
+    // 중복 저장 방지를 위해 초기 설정 갱신
     initialConfig.value = {
       provider: config.provider,
       api_key: config.api_key,
@@ -324,17 +350,19 @@ const saveConfig = async () => {
     
     MessagePlugin.success(t('webSearchSettings.toasts.saveSuccess'))
   } catch (error: any) {
-    console.error('Failed to save web search config:', error)
+    console.error(/* 원문: Failed to save web search config: */ '웹 검색 설정 저장 실패:', error)
     const errorMessage = error?.message || t('webSearchSettings.errors.unknown')
     MessagePlugin.error(t('webSearchSettings.toasts.saveFailed', { message: errorMessage }))
     throw error
   }
 }
 
-// 防抖保存
+// 원문: 防抖保存
+// 디바운스 저장
 let saveTimer: number | null = null
 const debouncedSave = () => {
-  // 初始化期间不触发自动保存
+  // 원문: 初始化期间不触发自动保存
+  // 초기화 중에는 자동 저장 미실행
   if (isInitializing.value) {
     return
   }
@@ -343,12 +371,14 @@ const debouncedSave = () => {
   }
   saveTimer = window.setTimeout(() => {
     saveConfig().catch(() => {
-      // 错误已在 saveConfig 中处理
+      // 원문: 错误已在 saveConfig 中处理
+      // 오류는 saveConfig 내부에서 이미 처리됨
     })
   }, 500)
 }
 
-// 处理变化
+// 원문: 处理变化
+// 변경 처리
 const handleProviderChange = () => {
   debouncedSave()
 }
@@ -373,12 +403,14 @@ const handleBlacklistChange = () => {
   debouncedSave()
 }
 
-// 初始化
+// 원문: 初始化
+// 초기화
 onMounted(async () => {
   isInitializing.value = true
   await loadProviders()
   await loadTenantConfig()
-  // loadTenantConfig 内部已经处理了 isInitializing，这里不需要再设置
+  // 원문: loadTenantConfig 内部已经处理了 isInitializing，这里不需要再设置
+  // isInitializing 은 loadTenantConfig 내부에서 처리되므로 여기서 재설정 불필요
 })
 </script>
 
@@ -513,7 +545,8 @@ onMounted(async () => {
   margin-top: 2px;
 }
 
-/* 修复下拉项描述与条目重叠：让选项支持多行自适应高度 */
+/* 원문: 修复下拉项描述与条目重叠：让选项支持多行自适应高度 */
+/* 드롭다운 설명과 항목 겹침 수정: 옵션이 여러 줄 높이 자동 조절을 지원하도록 설정 */
 :deep(.t-select-option) {
   height: auto;
   align-items: flex-start;
@@ -543,4 +576,3 @@ onMounted(async () => {
   padding: 2px 0;
 }
 </style>
-

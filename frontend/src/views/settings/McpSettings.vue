@@ -166,7 +166,7 @@ const handleToggleEnabled = async (service: MCPService) => {
 const handleTest = async (service: MCPService) => {
   if (!service || !service.id) return
   
-  testingServiceName.value = service.name || 'MCP 服务'
+  testingServiceName.value = service.name || /* 원문: MCP 服务 */ 'MCP 서비스'
   testing.value = true
   
   // 显示测试开始提示
@@ -467,4 +467,3 @@ onMounted(() => {
   }
 }
 </style>
-

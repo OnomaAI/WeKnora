@@ -36,14 +36,15 @@
                 <div v-show="currentSection === 'basic'" class="section">
                   <div class="section-header">
                     <h2>{{ $t('agent.editor.basicInfo') }}</h2>
-                    <p class="section-description">{{ $t('agent.editor.basicInfoDesc') || '配置智能体的基本信息' }}</p>
+                    <p class="section-description">{{ $t('agent.editor.basicInfoDesc') || /* 원문: 配置智能体的基本信息 */ '에이전트의 기본 정보를 설정합니다' }}</p>
                   </div>
                   
                   <div class="settings-group">
                     <!-- 内置智能体提示 -->
                     <div v-if="isBuiltinAgent" class="builtin-agent-notice">
                       <t-icon name="info-circle" />
-                      <span>这是内置智能体，名称和描述不可修改，但可以调整配置参数</span>
+                      <!-- 원문: 这是内置智能体，名称和描述不可修改，但可以调整配置参数 -->
+                      <span>이 에이전트는 내장 에이전트로, 이름과 설명은 수정할 수 없지만 구성 파라미터는 조정할 수 있습니다</span>
                     </div>
 
                     <!-- 运行模式（首先选择） -->
@@ -68,7 +69,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.name') }} <span v-if="!isBuiltinAgent" class="required">*</span></label>
-                        <p class="desc">为智能体设置一个易于识别的名称</p>
+                        <!-- 원문: 为智能体设置一个易于识别的名称 -->
+                        <p class="desc">에이전트를 쉽게 식별할 수 있는 이름을 설정합니다</p>
                       </div>
                       <div class="setting-control">
                         <div class="name-input-wrapper">
@@ -92,7 +94,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.description') }}</label>
-                        <p class="desc">简要描述智能体的用途和特点</p>
+                        <!-- 원문: 简要描述智能体的用途和特点 -->
+                        <p class="desc">에이전트의 용도와 특징을 간단히 설명합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-textarea 
@@ -108,13 +111,14 @@
                     <div class="setting-row setting-row-vertical">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.systemPrompt') }} <span v-if="!isBuiltinAgent" class="required">*</span></label>
-                        <p class="desc">自定义系统提示词，定义智能体的行为和角色{{ isBuiltinAgent ? '（留空则使用系统默认）' : '' }}</p>
+                        <p class="desc">사용자 정의 시스템 프롬프트로 에이전트의 동작과 역할을 정의합니다{{ isBuiltinAgent ? /* 원문: （留空则使用系统默认） */ ' (비워두면 시스템 기본값 사용)' : '' }}</p>
                         <div class="placeholder-tags">
-                          <span class="placeholder-label">可用变量：</span>
+                          <!-- 원문: 可用变量： -->
+                          <span class="placeholder-label">사용 가능한 변수:</span>
                           <t-tooltip 
                             v-for="placeholder in availablePlaceholders" 
                             :key="placeholder.name"
-                            :content="placeholder.description + '（点击插入）'"
+                            :content="placeholder.description + /* 원문: （点击插入） */ ' (클릭하여 삽입)'"
                             placement="top"
                           >
                             <span 
@@ -123,7 +127,7 @@
                               v-text="'{{' + placeholder.name + '}}'"
                             ></span>
                           </t-tooltip>
-                          <span class="placeholder-hint" v-text="'（点击插入，或输入 {{ 唤起列表）'"></span>
+                          <span class="placeholder-hint" v-text="/* 원문: （点击插入，或输入 {{ 唤起列表） */ '(클릭하여 삽입하거나 {{ 입력 시 목록 표시)'"></span>
                         </div>
                       </div>
                       <div class="setting-control setting-control-full" style="position: relative;">
@@ -191,14 +195,15 @@
                     <!-- 上下文模板（仅普通模式） -->
                     <div v-if="!isAgentMode" class="setting-row setting-row-vertical">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.contextTemplate') || '上下文模板' }} <span v-if="!isBuiltinAgent" class="required">*</span></label>
-                        <p class="desc">定义如何将检索到的内容格式化后传递给模型{{ isBuiltinAgent ? '（留空则使用系统默认）' : '' }}</p>
+                        <label>{{ $t('agent.editor.contextTemplate') || /* 원문: 上下文模板 */ '컨텍스트 템플릿' }} <span v-if="!isBuiltinAgent" class="required">*</span></label>
+                        <p class="desc">검색된 내용을 어떤 형식으로 정리해 모델에 전달할지 정의합니다{{ isBuiltinAgent ? /* 원문: （留空则使用系统默认） */ ' (비워두면 시스템 기본값 사용)' : '' }}</p>
                         <div class="placeholder-tags">
-                          <span class="placeholder-label">可用变量：</span>
+                          <!-- 원문: 可用变量： -->
+                          <span class="placeholder-label">사용 가능한 변수:</span>
                           <t-tooltip 
                             v-for="placeholder in contextTemplatePlaceholders" 
                             :key="placeholder.name"
-                            :content="placeholder.description + '（点击插入）'"
+                            :content="placeholder.description + /* 원문: （点击插入） */ ' (클릭하여 삽입)'"
                             placement="top"
                           >
                             <span 
@@ -207,7 +212,7 @@
                               v-text="'{{' + placeholder.name + '}}'"
                             ></span>
                           </t-tooltip>
-                          <span class="placeholder-hint" v-text="'（点击插入，或输入 {{ 唤起列表）'"></span>
+                          <span class="placeholder-hint" v-text="/* 원문: （点击插入，或输入 {{ 唤起列表） */ '(클릭하여 삽입하거나 {{ 입력 시 목록 표시)'"></span>
                         </div>
                       </div>
                       <div class="setting-control setting-control-full" style="position: relative;">
@@ -261,7 +266,7 @@
                 <div v-show="currentSection === 'model'" class="section">
                   <div class="section-header">
                     <h2>{{ $t('agent.editor.modelConfig') }}</h2>
-                    <p class="section-description">{{ $t('agent.editor.modelConfigDesc') || '配置智能体的模型参数' }}</p>
+                    <p class="section-description">{{ $t('agent.editor.modelConfigDesc') || /* 원문: 配置智能体的模型参数 */ '에이전트 모델 파라미터를 설정합니다' }}</p>
                   </div>
                   
                   <div class="settings-group">
@@ -269,7 +274,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.model') }} <span class="required">*</span></label>
-                        <p class="desc">选择智能体使用的大语言模型</p>
+                        <!-- 원문: 选择智能体使用的大语言模型 -->
+                        <p class="desc">에이전트가 사용할 대규모 언어 모델을 선택합니다</p>
                       </div>
                       <div class="setting-control">
                         <ModelSelector
@@ -287,7 +293,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.temperature') }}</label>
-                        <p class="desc">控制输出的随机性，0 最确定，1 最随机</p>
+                        <!-- 원문: 控制输出的随机性，0 最确定，1 最随机 -->
+                        <p class="desc">출력의 무작위성을 제어합니다. 0은 가장 결정적이고 1은 가장 무작위입니다</p>
                       </div>
                       <div class="setting-control">
                         <div class="slider-wrapper">
@@ -300,8 +307,9 @@
                     <!-- 最大生成Token数（仅普通模式） -->
                     <div v-if="!isAgentMode" class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.maxCompletionTokens') || '最大生成Token数' }}</label>
-                        <p class="desc">模型生成回复的最大Token数量</p>
+                        <label>{{ $t('agent.editor.maxCompletionTokens') || /* 원문: 最大生成Token数 */ '최대 생성 토큰 수' }}</label>
+                        <!-- 원문: 模型生成回复的最大Token数量 -->
+                        <p class="desc">모델이 생성하는 응답의 최대 토큰 수입니다</p>
                       </div>
                       <div class="setting-control">
                         <t-input-number v-model="formData.config.max_completion_tokens" :min="100" :max="100000" :step="100" theme="column" />
@@ -311,8 +319,9 @@
                     <!-- 思考模式 -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.thinking') || '思考模式' }}</label>
-                        <p class="desc">启用模型的扩展思考能力（需要模型支持）</p>
+                        <label>{{ $t('agent.editor.thinking') || /* 원문: 思考模式 */ '사고 모드' }}</label>
+                        <!-- 원문: 启用模型的扩展思考能力（需要模型支持） -->
+                        <p class="desc">모델의 확장 사고 기능을 활성화합니다(모델 지원 필요)</p>
                       </div>
                       <div class="setting-control">
                         <t-switch v-model="thinkingEnabled" />
@@ -324,8 +333,9 @@
                 <!-- 多轮对话（仅普通模式显示，Agent模式内部自动控制） -->
                 <div v-show="currentSection === 'conversation' && !isAgentMode" class="section">
                   <div class="section-header">
-                    <h2>{{ $t('agent.editor.conversationSettings') || '多轮对话' }}</h2>
-                    <p class="section-description">配置多轮对话和问题改写相关参数</p>
+                    <h2>{{ $t('agent.editor.conversationSettings') || /* 원문: 多轮对话 */ '멀티턴 대화' }}</h2>
+                    <!-- 원문: 配置多轮对话和问题改写相关参数 -->
+                    <p class="section-description">멀티턴 대화와 질문 재작성 관련 파라미터를 설정합니다</p>
                   </div>
                   
                   <div class="settings-group">
@@ -333,7 +343,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.multiTurn') }}</label>
-                        <p class="desc">开启后将保留历史对话上下文</p>
+                        <!-- 원문: 开启后将保留历史对话上下文 -->
+                        <p class="desc">활성화하면 대화 기록 컨텍스트를 유지합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-switch v-model="formData.config.multi_turn_enabled" />
@@ -344,7 +355,8 @@
                     <div v-if="formData.config.multi_turn_enabled" class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.historyTurns') }}</label>
-                        <p class="desc">保留最近几轮对话作为上下文</p>
+                        <!-- 원문: 保留最近几轮对话作为上下文 -->
+                        <p class="desc">최근 대화 몇 턴을 컨텍스트로 유지합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-input-number v-model="formData.config.history_turns" :min="1" :max="20" theme="column" />
@@ -354,8 +366,9 @@
                     <!-- 问题改写（仅多轮对话开启且普通模式时显示） -->
                     <div v-if="formData.config.multi_turn_enabled && !isAgentMode" class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.enableRewrite') || '问题改写' }}</label>
-                        <p class="desc">多轮对话时自动改写用户问题，消解指代和补全省略</p>
+                        <label>{{ $t('agent.editor.enableRewrite') || /* 원문: 问题改写 */ '질문 재작성' }}</label>
+                        <!-- 원문: 多轮对话时自动改写用户问题，消解指代和补全省略 -->
+                        <p class="desc">멀티턴 대화에서 사용자 질문을 자동 재작성해 지시어를 해소하고 생략을 보완합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-switch v-model="formData.config.enable_rewrite" />
@@ -365,14 +378,16 @@
                     <!-- 改写系统提示词 -->
                     <div v-if="formData.config.multi_turn_enabled && !isAgentMode && formData.config.enable_rewrite" class="setting-row setting-row-vertical">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.rewritePromptSystem') || '改写系统提示词' }}</label>
-                        <p class="desc">用于问题改写的系统提示词（留空使用默认）</p>
+                        <label>{{ $t('agent.editor.rewritePromptSystem') || /* 원문: 改写系统提示词 */ '재작성 시스템 프롬프트' }}</label>
+                        <!-- 원문: 用于问题改写的系统提示词（留空使用默认） -->
+                        <p class="desc">질문 재작성에 사용하는 시스템 프롬프트입니다(비워두면 기본값 사용)</p>
                         <div class="placeholder-tags" v-if="rewriteSystemPlaceholders.length > 0">
-                          <span class="placeholder-label">可用变量：</span>
+                          <!-- 원문: 可用变量： -->
+                          <span class="placeholder-label">사용 가능한 변수:</span>
                           <t-tooltip 
                             v-for="placeholder in rewriteSystemPlaceholders" 
                             :key="placeholder.name"
-                            :content="placeholder.description + '（点击插入）'"
+                            :content="placeholder.description + /* 원문: （点击插入） */ ' (클릭하여 삽입)'"
                             placement="top"
                           >
                             <span 
@@ -381,7 +396,7 @@
                               v-text="'{{' + placeholder.name + '}}'"
                             ></span>
                           </t-tooltip>
-                          <span class="placeholder-hint" v-text="'（点击插入，或输入 {{ 唤起列表）'"></span>
+                          <span class="placeholder-hint" v-text="/* 원문: （点击插入，或输入 {{ 唤起列表） */ '(클릭하여 삽입하거나 {{ 입력 시 목록 표시)'"></span>
                         </div>
                       </div>
                       <div class="setting-control setting-control-full" style="position: relative;">
@@ -389,7 +404,7 @@
                           <t-textarea 
                             ref="rewriteSystemTextareaRef"
                             v-model="formData.config.rewrite_prompt_system" 
-                            :placeholder="defaultRewritePromptSystem || $t('agent.editor.rewritePromptSystemPlaceholder') || '留空使用系统默认提示词'"
+                            :placeholder="defaultRewritePromptSystem || $t('agent.editor.rewritePromptSystemPlaceholder') || /* 원문: 留空使用系统默认提示词 */ '비워두면 시스템 기본 프롬프트를 사용합니다'"
                             :autosize="{ minRows: 4, maxRows: 10 }"
                             @input="handleRewriteSystemInput"
                           />
@@ -428,14 +443,16 @@
                     <!-- 改写用户提示词 -->
                     <div v-if="formData.config.multi_turn_enabled && !isAgentMode && formData.config.enable_rewrite" class="setting-row setting-row-vertical">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.rewritePromptUser') || '改写用户提示词' }}</label>
-                        <p class="desc">用于问题改写的用户提示词模板（留空使用默认）</p>
+                        <label>{{ $t('agent.editor.rewritePromptUser') || /* 원문: 改写用户提示词 */ '재작성 사용자 프롬프트' }}</label>
+                        <!-- 원문: 用于问题改写的用户提示词模板（留空使用默认） -->
+                        <p class="desc">질문 재작성에 사용하는 사용자 프롬프트 템플릿입니다(비워두면 기본값 사용)</p>
                         <div class="placeholder-tags" v-if="rewritePlaceholders.length > 0">
-                          <span class="placeholder-label">可用变量：</span>
+                          <!-- 원문: 可用变量： -->
+                          <span class="placeholder-label">사용 가능한 변수:</span>
                           <t-tooltip 
                             v-for="placeholder in rewritePlaceholders" 
                             :key="placeholder.name"
-                            :content="placeholder.description + '（点击插入）'"
+                            :content="placeholder.description + /* 원문: （点击插入） */ ' (클릭하여 삽입)'"
                             placement="top"
                           >
                             <span 
@@ -444,7 +461,7 @@
                               v-text="'{{' + placeholder.name + '}}'"
                             ></span>
                           </t-tooltip>
-                          <span class="placeholder-hint" v-text="'（点击插入，或输入 {{ 唤起列表）'"></span>
+                          <span class="placeholder-hint" v-text="/* 원문: （点击插入，或输入 {{ 唤起列表） */ '(클릭하여 삽입하거나 {{ 입력 시 목록 표시)'"></span>
                         </div>
                       </div>
                       <div class="setting-control setting-control-full" style="position: relative;">
@@ -452,7 +469,7 @@
                           <t-textarea 
                             ref="rewriteUserTextareaRef"
                             v-model="formData.config.rewrite_prompt_user" 
-                            :placeholder="defaultRewritePromptUser || $t('agent.editor.rewritePromptUserPlaceholder') || '留空使用系统默认提示词'"
+                            :placeholder="defaultRewritePromptUser || $t('agent.editor.rewritePromptUserPlaceholder') || /* 원문: 留空使用系统默认提示词 */ '비워두면 시스템 기본 프롬프트를 사용합니다'"
                             :autosize="{ minRows: 4, maxRows: 10 }"
                             @input="handleRewriteUserInput"
                           />
@@ -493,8 +510,8 @@
                 <!-- 工具配置（仅 Agent 模式） -->
                 <div v-show="currentSection === 'tools' && isAgentMode" class="section">
                   <div class="section-header">
-                    <h2>{{ $t('agent.editor.toolsConfig') || '工具配置' }}</h2>
-                    <p class="section-description">{{ $t('agent.editor.toolsConfigDesc') || '配置 Agent 可以使用的工具' }}</p>
+                    <h2>{{ $t('agent.editor.toolsConfig') || /* 원문: 工具配置 */ '도구 설정' }}</h2>
+                    <p class="section-description">{{ $t('agent.editor.toolsConfigDesc') || /* 원문: 配置 Agent 可以使用的工具 */ 'Agent가 사용할 수 있는 도구를 설정합니다' }}</p>
                   </div>
                   
                   <div class="settings-group">
@@ -502,7 +519,8 @@
                     <div class="setting-row setting-row-vertical">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.allowedTools') }}</label>
-                        <p class="desc">选择 Agent 可以使用的工具</p>
+                        <!-- 원문: 选择 Agent 可以使用的工具 -->
+                        <p class="desc">Agent가 사용할 수 있는 도구를 선택합니다</p>
                       </div>
                       <div class="setting-control setting-control-full">
                         <t-checkbox-group v-model="formData.config.allowed_tools" class="tools-checkbox-group">
@@ -516,7 +534,7 @@
                             <div class="tool-item-content">
                               <span class="tool-name">{{ tool.label }}</span>
                               <span v-if="tool.description" class="tool-desc">{{ tool.description }}</span>
-                              <span v-if="tool.disabled" class="tool-disabled-hint">（需要配置知识库）</span>
+                              <span v-if="tool.disabled" class="tool-disabled-hint"><!-- 원문: （需要配置知识库） --> (지식 베이스 설정 필요)</span>
                             </div>
                           </t-checkbox>
                         </t-checkbox-group>
@@ -527,7 +545,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.maxIterations') }}</label>
-                        <p class="desc">Agent 执行任务时的最大推理步骤数</p>
+                        <!-- 원문: Agent 执行任务时的最大推理步骤数 -->
+                        <p class="desc">Agent가 작업을 수행할 때의 최대 추론 단계 수입니다</p>
                       </div>
                       <div class="setting-control">
                         <t-input-number v-model="formData.config.max_iterations" :min="1" :max="50" theme="column" />
@@ -537,14 +556,16 @@
                     <!-- MCP 服务选择 -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>MCP 服务</label>
-                        <p class="desc">选择 Agent 可以调用的 MCP 服务</p>
+                        <!-- 원문: MCP 服务 -->
+                        <label>MCP 서비스</label>
+                        <!-- 원문: 选择 Agent 可以调用的 MCP 服务 -->
+                        <p class="desc">Agent가 호출할 수 있는 MCP 서비스를 선택합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-radio-group v-model="mcpSelectionMode">
-                          <t-radio-button value="all">全部</t-radio-button>
-                          <t-radio-button value="selected">指定</t-radio-button>
-                          <t-radio-button value="none">禁用</t-radio-button>
+                          <t-radio-button value="all"><!-- 원문: 全部 --> 전체</t-radio-button>
+                          <t-radio-button value="selected"><!-- 원문: 指定 --> 지정</t-radio-button>
+                          <t-radio-button value="none"><!-- 원문: 禁用 --> 비활성화</t-radio-button>
                         </t-radio-group>
                       </div>
                     </div>
@@ -552,14 +573,16 @@
                     <!-- 选择指定 MCP 服务 -->
                     <div v-if="mcpSelectionMode === 'selected' && mcpOptions.length > 0" class="setting-row">
                       <div class="setting-info">
-                        <label>选择 MCP 服务</label>
-                        <p class="desc">选择要启用的 MCP 服务</p>
+                        <!-- 원문: 选择 MCP 服务 -->
+                        <label>MCP 서비스 선택</label>
+                        <!-- 원문: 选择要启用的 MCP 服务 -->
+                        <p class="desc">활성화할 MCP 서비스를 선택합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-select 
                           v-model="formData.config.mcp_services" 
                           multiple 
-                          placeholder="选择 MCP 服务"
+                          placeholder="MCP 서비스 선택"
                           filterable
                         >
                           <t-option 
@@ -641,8 +664,8 @@
                 <!-- 知识库配置 -->
                 <div v-show="currentSection === 'knowledge'" class="section">
                   <div class="section-header">
-                    <h2>{{ $t('agent.editor.knowledgeConfig') || '知识库' }}</h2>
-                    <p class="section-description">{{ $t('agent.editor.knowledgeConfigDesc') || '配置智能体可访问的知识库' }}</p>
+                    <h2>{{ $t('agent.editor.knowledgeConfig') || /* 원문: 知识库 */ '지식 베이스' }}</h2>
+                    <p class="section-description">{{ $t('agent.editor.knowledgeConfigDesc') || /* 원문: 配置智能体可访问的知识库 */ '에이전트가 접근할 수 있는 지식 베이스를 설정합니다' }}</p>
                   </div>
                   
                   <div class="settings-group">
@@ -650,18 +673,19 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.knowledgeBases') }}</label>
-                        <p class="desc">选择智能体可访问的知识库范围</p>
+                        <!-- 원문: 选择智能体可访问的知识库范围 -->
+                        <p class="desc">에이전트가 접근할 수 있는 지식 베이스 범위를 선택합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-radio-group v-model="kbSelectionMode">
-                          <t-radio-button value="all">{{ $t('agent.editor.allKnowledgeBases') || '全部' }}</t-radio-button>
-                          <t-radio-button value="selected">{{ $t('agent.editor.selectedKnowledgeBases') || '指定' }}</t-radio-button>
-                          <t-radio-button value="none">{{ $t('agent.editor.noKnowledgeBase') || '禁用' }}</t-radio-button>
+                          <t-radio-button value="all">{{ $t('agent.editor.allKnowledgeBases') || /* 원문: 全部 */ '전체' }}</t-radio-button>
+                          <t-radio-button value="selected">{{ $t('agent.editor.selectedKnowledgeBases') || /* 원문: 指定 */ '지정' }}</t-radio-button>
+                          <t-radio-button value="none">{{ $t('agent.editor.noKnowledgeBase') || /* 원문: 禁用 */ '비활성화' }}</t-radio-button>
                         </t-radio-group>
                       </div>
                     </div>
 
-                    <!-- 选择指定知识库（仅在选择"指定知识库"时显示） -->
+                    <!-- 지정 지식 베이스 선택("지정 지식 베이스" 선택 시에만 표시) -->
                     <div v-if="kbSelectionMode === 'selected'" class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.selectKnowledgeBases') }}</label>
@@ -715,14 +739,16 @@
                     <!-- 支持的文件类型（限制用户可选择的文件类型） -->
                     <div v-if="hasKnowledgeBase" class="setting-row">
                       <div class="setting-info">
-                        <label>支持的文件类型</label>
-                        <p class="desc">限制可选择的文件类型，留空表示支持所有类型</p>
+                        <!-- 원문: 支持的文件类型 -->
+                        <label>지원 파일 형식</label>
+                        <!-- 원문: 限制可选择的文件类型，留空表示支持所有类型 -->
+                        <p class="desc">선택 가능한 파일 형식을 제한합니다. 비워두면 모든 형식을 지원합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-select 
                           v-model="formData.config.supported_file_types" 
                           multiple 
-                          placeholder="全部类型"
+                          placeholder="모든 형식"
                           :min-collapsed-num="3"
                           clearable
                         >
@@ -739,8 +765,8 @@
                     <!-- 仅在提及时检索知识库（当配置了知识库时显示） -->
                     <div v-if="hasKnowledgeBase" class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.retrieveKBOnlyWhenMentioned') || '仅在 @ 提及时检索' }}</label>
-                        <p class="desc">{{ $t('agent.editor.retrieveKBOnlyWhenMentionedDesc') || '开启后，只有用户明确 @ 提及知识库或文档时才会进行检索' }}</p>
+                        <label>{{ $t('agent.editor.retrieveKBOnlyWhenMentioned') || /* 원문: 仅在 @ 提及时检索 */ '@ 언급 시에만 검색' }}</label>
+                        <p class="desc">{{ $t('agent.editor.retrieveKBOnlyWhenMentionedDesc') || /* 원문: 开启后，只有用户明确 @ 提及知识库或文档时才会进行检索 */ '활성화하면 사용자가 지식 베이스나 문서를 명시적으로 @ 언급한 경우에만 검색합니다' }}</p>
                       </div>
                       <div class="setting-control">
                         <t-switch v-model="formData.config.retrieve_kb_only_when_mentioned" />
@@ -769,8 +795,9 @@
                     <div v-if="hasFaqKnowledgeBase" class="faq-strategy-section">
                       <div class="faq-strategy-header">
                         <t-icon name="chat-bubble-help" class="faq-icon" />
-                        <span>FAQ 优先策略</span>
-                        <t-tooltip content="当知识库中包含 FAQ（问答对）时，可以启用此策略让 FAQ 答案优先于普通文档">
+                        <!-- 원문: FAQ 优先策略 -->
+                        <span>FAQ 우선 전략</span>
+                        <t-tooltip content="지식 베이스에 FAQ(질의응답 쌍)가 포함된 경우, 이 전략을 활성화하면 FAQ 답변을 일반 문서보다 우선합니다">
                           <t-icon name="help-circle" class="help-icon" />
                         </t-tooltip>
                       </div>
@@ -778,8 +805,10 @@
                       <!-- FAQ 优先开关 -->
                       <div class="setting-row">
                         <div class="setting-info">
-                          <label>启用 FAQ 优先</label>
-                          <p class="desc">FAQ 答案将优先于普通文档被引用，提高回答准确性</p>
+                          <!-- 원문: 启用 FAQ 优先 -->
+                          <label>FAQ 우선 사용</label>
+                          <!-- 원문: FAQ 答案将优先于普通文档被引用，提高回答准确性 -->
+                          <p class="desc">FAQ 답변을 일반 문서보다 우선 참조하여 응답 정확도를 높입니다</p>
                         </div>
                         <div class="setting-control">
                           <t-switch v-model="formData.config.faq_priority_enabled" />
@@ -789,8 +818,10 @@
                       <!-- FAQ 直接回答阈值 -->
                       <div v-if="formData.config.faq_priority_enabled" class="setting-row">
                         <div class="setting-info">
-                          <label>直接回答阈值</label>
-                          <p class="desc">当问题与 FAQ 相似度超过此值时，直接使用 FAQ 答案</p>
+                          <!-- 원문: 直接回答阈值 -->
+                          <label>직접 응답 임계값</label>
+                          <!-- 원문: 当问题与 FAQ 相似度超过此值时，直接使用 FAQ 答案 -->
+                          <p class="desc">질문과 FAQ의 유사도가 이 값을 넘으면 FAQ 답변을 직접 사용합니다</p>
                         </div>
                         <div class="setting-control">
                           <div class="slider-wrapper">
@@ -803,8 +834,10 @@
                       <!-- FAQ 分数加权 -->
                       <div v-if="formData.config.faq_priority_enabled" class="setting-row">
                         <div class="setting-info">
-                          <label>FAQ 分数加权</label>
-                          <p class="desc">FAQ 结果的相关性分数乘以此系数，使其排序更靠前</p>
+                          <!-- 원문: FAQ 分数加权 -->
+                          <label>FAQ 점수 가중치</label>
+                          <!-- 원문: FAQ 结果的相关性分数乘以此系数，使其排序更靠前 -->
+                          <p class="desc">FAQ 결과의 관련성 점수에 이 계수를 곱해 순위를 높입니다</p>
                         </div>
                         <div class="setting-control">
                           <div class="slider-wrapper">
@@ -820,8 +853,8 @@
                 <!-- 网络搜索配置 -->
                 <div v-show="currentSection === 'websearch'" class="section">
                   <div class="section-header">
-                    <h2>{{ $t('agent.editor.webSearchConfig') || '网络搜索' }}</h2>
-                    <p class="section-description">{{ $t('agent.editor.webSearchConfigDesc') || '配置智能体的网络搜索能力' }}</p>
+                    <h2>{{ $t('agent.editor.webSearchConfig') || /* 원문: 网络搜索 */ '웹 검색' }}</h2>
+                    <p class="section-description">{{ $t('agent.editor.webSearchConfigDesc') || /* 원문: 配置智能体的网络搜索能力 */ '에이전트의 웹 검색 기능을 설정합니다' }}</p>
                   </div>
                   
                   <div class="settings-group">
@@ -829,7 +862,8 @@
                     <div class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.webSearch') }}</label>
-                        <p class="desc">启用后智能体可以搜索互联网获取信息</p>
+                        <!-- 원문: 启用后智能体可以搜索互联网获取信息 -->
+                        <p class="desc">활성화하면 에이전트가 인터넷을 검색해 정보를 가져올 수 있습니다</p>
                       </div>
                       <div class="setting-control">
                         <t-switch v-model="formData.config.web_search_enabled" />
@@ -840,7 +874,8 @@
                     <div v-if="formData.config.web_search_enabled" class="setting-row">
                       <div class="setting-info">
                         <label>{{ $t('agent.editor.webSearchMaxResults') }}</label>
-                        <p class="desc">每次搜索返回的最大结果数量</p>
+                        <!-- 원문: 每次搜索返回的最大结果数量 -->
+                        <p class="desc">검색 한 번당 반환할 최대 결과 수입니다</p>
                       </div>
                       <div class="setting-control">
                         <div class="slider-wrapper">
@@ -855,16 +890,18 @@
                 <!-- 检索策略（仅在有知识库能力时显示） -->
                 <div v-show="currentSection === 'retrieval' && hasKnowledgeBase" class="section">
                   <div class="section-header">
-                    <h2>{{ $t('agent.editor.retrievalStrategy') || '检索策略' }}</h2>
-                    <p class="section-description">配置知识库检索和排序的参数</p>
+                    <h2>{{ $t('agent.editor.retrievalStrategy') || /* 원문: 检索策略 */ '검색 전략' }}</h2>
+                    <!-- 원문: 配置知识库检索和排序的参数 -->
+                    <p class="section-description">지식 베이스 검색 및 정렬 파라미터를 설정합니다</p>
                   </div>
                   
                   <div class="settings-group">
                     <!-- 查询扩展（仅普通模式） -->
                     <div v-if="!isAgentMode" class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.enableQueryExpansion') || '查询扩展' }}</label>
-                        <p class="desc">自动扩展查询词以提高召回率</p>
+                        <label>{{ $t('agent.editor.enableQueryExpansion') || /* 원문: 查询扩展 */ '쿼리 확장' }}</label>
+                        <!-- 원문: 自动扩展查询词以提高召回率 -->
+                        <p class="desc">재현율을 높이기 위해 검색어를 자동 확장합니다</p>
                       </div>
                       <div class="setting-control">
                         <t-switch v-model="formData.config.enable_query_expansion" />
@@ -874,8 +911,9 @@
                     <!-- 向量召回TopK -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.embeddingTopK') || '向量召回数量' }}</label>
-                        <p class="desc">向量检索返回的最大结果数量</p>
+                        <label>{{ $t('agent.editor.embeddingTopK') || /* 원문: 向量召回数量 */ '벡터 검색 개수' }}</label>
+                        <!-- 원문: 向量检索返回的最大结果数量 -->
+                        <p class="desc">벡터 검색이 반환하는 최대 결과 수입니다</p>
                       </div>
                       <div class="setting-control">
                         <t-input-number v-model="formData.config.embedding_top_k" :min="1" :max="50" theme="column" />
@@ -885,8 +923,9 @@
                     <!-- 关键词阈值 -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.keywordThreshold') || '关键词阈值' }}</label>
-                        <p class="desc">关键词检索的最低相关性分数</p>
+                        <label>{{ $t('agent.editor.keywordThreshold') || /* 원문: 关键词阈值 */ '키워드 임계값' }}</label>
+                        <!-- 원문: 关键词检索的最低相关性分数 -->
+                        <p class="desc">키워드 검색의 최소 관련성 점수입니다</p>
                       </div>
                       <div class="setting-control">
                         <div class="slider-wrapper">
@@ -899,8 +938,9 @@
                     <!-- 向量阈值 -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.vectorThreshold') || '向量阈值' }}</label>
-                        <p class="desc">向量检索的最低相似度分数</p>
+                        <label>{{ $t('agent.editor.vectorThreshold') || /* 원문: 向量阈值 */ '벡터 임계값' }}</label>
+                        <!-- 원문: 向量检索的最低相似度分数 -->
+                        <p class="desc">벡터 검색의 최소 유사도 점수입니다</p>
                       </div>
                       <div class="setting-control">
                         <div class="slider-wrapper">
@@ -913,8 +953,9 @@
                     <!-- 重排TopK -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.rerankTopK') || '重排数量' }}</label>
-                        <p class="desc">重排序后保留的最大结果数量</p>
+                        <label>{{ $t('agent.editor.rerankTopK') || /* 원문: 重排数量 */ '재정렬 개수' }}</label>
+                        <!-- 원문: 重排序后保留的最大结果数量 -->
+                        <p class="desc">재정렬 후 유지할 최대 결과 수입니다</p>
                       </div>
                       <div class="setting-control">
                         <t-input-number v-model="formData.config.rerank_top_k" :min="1" :max="20" theme="column" />
@@ -924,8 +965,9 @@
                     <!-- 重排阈值 -->
                     <div class="setting-row">
                       <div class="setting-info">
-                        <label>{{ $t('agent.editor.rerankThreshold') || '重排阈值' }}</label>
-                        <p class="desc">重排序的最低相关性分数</p>
+                        <label>{{ $t('agent.editor.rerankThreshold') || /* 원문: 重排阈值 */ '재정렬 임계값' }}</label>
+                        <!-- 원문: 重排序的最低相关性分数 -->
+                        <p class="desc">재정렬의 최소 관련성 점수입니다</p>
                       </div>
                       <div class="setting-control">
                         <div class="slider-wrapper">
@@ -939,13 +981,14 @@
                     <template v-if="!isAgentMode">
                       <div class="setting-row">
                         <div class="setting-info">
-                          <label>{{ $t('agent.editor.fallbackStrategy') || '兜底策略' }}</label>
-                          <p class="desc">当无法从知识库找到相关内容时的处理方式</p>
+                          <label>{{ $t('agent.editor.fallbackStrategy') || /* 원문: 兜底策略 */ '폴백 전략' }}</label>
+                          <!-- 원문: 当无法从知识库找到相关内容时的处理方式 -->
+                          <p class="desc">지식 베이스에서 관련 내용을 찾지 못했을 때의 처리 방식입니다</p>
                         </div>
                         <div class="setting-control">
                           <t-radio-group v-model="formData.config.fallback_strategy">
-                            <t-radio-button value="fixed">固定回复</t-radio-button>
-                            <t-radio-button value="model">模型生成</t-radio-button>
+                            <t-radio-button value="fixed"><!-- 원문: 固定回复 --> 고정 응답</t-radio-button>
+                            <t-radio-button value="model"><!-- 원문: 模型生成 --> 모델 생성</t-radio-button>
                           </t-radio-group>
                         </div>
                       </div>
@@ -953,14 +996,15 @@
                       <!-- 固定兜底回复 -->
                       <div v-if="formData.config.fallback_strategy === 'fixed'" class="setting-row setting-row-vertical">
                         <div class="setting-info">
-                          <label>{{ $t('agent.editor.fallbackResponse') || '固定回复内容' }}</label>
-                          <p class="desc">当无法回答时返回的固定文本</p>
+                          <label>{{ $t('agent.editor.fallbackResponse') || /* 원문: 固定回复内容 */ '고정 응답 내용' }}</label>
+                          <!-- 원문: 当无法回答时返回的固定文本 -->
+                          <p class="desc">응답할 수 없을 때 반환할 고정 텍스트입니다</p>
                         </div>
                         <div class="setting-control setting-control-full">
                           <div class="textarea-with-template">
                             <t-textarea 
                               v-model="formData.config.fallback_response" 
-                              :placeholder="defaultFallbackResponse || $t('agent.editor.fallbackResponsePlaceholder') || '抱歉，我无法回答这个问题。'"
+                              :placeholder="defaultFallbackResponse || $t('agent.editor.fallbackResponsePlaceholder') || /* 원문: 抱歉，我无法回答这个问题。 */ '죄송합니다. 이 질문에는 답변할 수 없습니다.'"
                               :autosize="{ minRows: 2, maxRows: 6 }"
                             />
                             <PromptTemplateSelector 
@@ -975,14 +1019,16 @@
                       <!-- 兜底提示词 -->
                       <div v-if="formData.config.fallback_strategy === 'model'" class="setting-row setting-row-vertical">
                         <div class="setting-info">
-                          <label>{{ $t('agent.editor.fallbackPrompt') || '兜底提示词' }}</label>
-                          <p class="desc">当无法从知识库找到答案时，引导模型生成回复的提示词</p>
+                          <label>{{ $t('agent.editor.fallbackPrompt') || /* 원문: 兜底提示词 */ '폴백 프롬프트' }}</label>
+                          <!-- 원문: 当无法从知识库找到答案时，引导模型生成回复的提示词 -->
+                          <p class="desc">지식 베이스에서 답을 찾지 못했을 때 모델 응답을 유도하는 프롬프트입니다</p>
                           <div class="placeholder-tags" v-if="fallbackPlaceholders.length > 0">
-                            <span class="placeholder-label">可用变量：</span>
+                            <!-- 원문: 可用变量： -->
+                            <span class="placeholder-label">사용 가능한 변수:</span>
                             <t-tooltip 
                               v-for="placeholder in fallbackPlaceholders" 
                               :key="placeholder.name"
-                              :content="placeholder.description + '（点击插入）'"
+                              :content="placeholder.description + /* 원문: （点击插入） */ ' (클릭하여 삽입)'"
                               placement="top"
                             >
                               <span 
@@ -991,7 +1037,7 @@
                                 v-text="'{{' + placeholder.name + '}}'"
                               ></span>
                             </t-tooltip>
-                            <span class="placeholder-hint" v-text="'（点击插入，或输入 {{ 唤起列表）'"></span>
+                            <span class="placeholder-hint" v-text="/* 원문: （点击插入，或输入 {{ 唤起列表） */ '(클릭하여 삽입하거나 {{ 입력 시 목록 표시)'"></span>
                           </div>
                         </div>
                         <div class="setting-control setting-control-full" style="position: relative;">
@@ -999,7 +1045,7 @@
                             <t-textarea 
                               ref="fallbackPromptTextareaRef"
                               v-model="formData.config.fallback_prompt" 
-                              :placeholder="defaultFallbackPrompt || $t('agent.editor.fallbackPromptPlaceholder') || '留空使用系统默认提示词'"
+                              :placeholder="defaultFallbackPrompt || $t('agent.editor.fallbackPromptPlaceholder') || /* 원문: 留空使用系统默认提示词 */ '비워두면 시스템 기본 프롬프트를 사용합니다'"
                               :autosize="{ minRows: 4, maxRows: 10 }"
                               @input="handleFallbackPromptInput"
                             />
@@ -1134,16 +1180,16 @@ const skillsSelectionMode = ref<'all' | 'selected' | 'none'>('none');
 
 // 可用工具列表 (与后台 definitions.go 保持一致)
 const allTools = [
-  { value: 'thinking', label: '思考', description: '动态和反思性的问题解决思考工具', requiresKB: false },
-  { value: 'todo_write', label: '制定计划', description: '创建结构化的研究计划', requiresKB: false },
-  { value: 'grep_chunks', label: '关键词搜索', description: '快速定位包含特定关键词的文档和分块', requiresKB: true },
-  { value: 'knowledge_search', label: '语义搜索', description: '理解问题并查找语义相关内容', requiresKB: true },
-  { value: 'list_knowledge_chunks', label: '查看文档分块', description: '获取文档完整分块内容', requiresKB: true },
-  { value: 'query_knowledge_graph', label: '查询知识图谱', description: '从知识图谱中查询关系', requiresKB: true },
-  { value: 'get_document_info', label: '获取文档信息', description: '查看文档元数据', requiresKB: true },
-  { value: 'database_query', label: '查询数据库', description: '查询数据库中的信息', requiresKB: true },
-  { value: 'data_analysis', label: '数据分析', description: '理解数据文件并进行数据分析', requiresKB: true },
-  { value: 'data_schema', label: '查看数据元信息', description: '获取表格文件的元信息', requiresKB: true },
+  { value: 'thinking', label: /* 원문: 思考 */ '사고', description: /* 원문: 动态和反思性的问题解决思考工具 */ '동적이고 성찰적인 문제 해결 사고 도구', requiresKB: false },
+  { value: 'todo_write', label: /* 원문: 制定计划 */ '계획 수립', description: /* 원문: 创建结构化的研究计划 */ '구조화된 연구 계획 생성', requiresKB: false },
+  { value: 'grep_chunks', label: /* 원문: 关键词搜索 */ '키워드 검색', description: /* 원문: 快速定位包含特定关键词的文档和分块 */ '특정 키워드가 포함된 문서와 청크를 빠르게 찾습니다', requiresKB: true },
+  { value: 'knowledge_search', label: /* 원문: 语义搜索 */ '의미 검색', description: /* 원문: 理解问题并查找语义相关内容 */ '질문을 이해하고 의미적으로 관련된 내용을 찾습니다', requiresKB: true },
+  { value: 'list_knowledge_chunks', label: /* 원문: 查看文档分块 */ '문서 청크 보기', description: /* 원문: 获取文档完整分块内容 */ '문서의 전체 청크 내용을 가져옵니다', requiresKB: true },
+  { value: 'query_knowledge_graph', label: /* 원문: 查询知识图谱 */ '지식 그래프 질의', description: /* 원문: 从知识图谱中查询关系 */ '지식 그래프에서 관계를 조회합니다', requiresKB: true },
+  { value: 'get_document_info', label: /* 원문: 获取文档信息 */ '문서 정보 조회', description: /* 원문: 查看文档元数据 */ '문서 메타데이터를 확인합니다', requiresKB: true },
+  { value: 'database_query', label: /* 원문: 查询数据库 */ '데이터베이스 조회', description: /* 원문: 查询数据库中的信息 */ '데이터베이스 내 정보를 조회합니다', requiresKB: true },
+  { value: 'data_analysis', label: /* 원문: 数据分析 */ '데이터 분석', description: /* 원문: 理解数据文件并进行数据分析 */ '데이터 파일을 이해하고 데이터를 분석합니다', requiresKB: true },
+  { value: 'data_schema', label: /* 원문: 查看数据元信息 */ '데이터 메타정보 보기', description: /* 원문: 获取表格文件的元信息 */ '표 형식 파일의 메타정보를 가져옵니다', requiresKB: true },
 ];
 
 // 知识库分组：我的 vs 共享的
@@ -1176,13 +1222,13 @@ const availableTools = computed(() => {
 
 // 可用文件类型列表
 const availableFileTypes = [
-  { value: 'pdf', label: 'PDF', description: 'PDF 文档' },
-  { value: 'docx', label: 'Word', description: 'Word 文档 (.docx/.doc)' },
-  { value: 'txt', label: '文本', description: '纯文本文件 (.txt)' },
-  { value: 'md', label: 'Markdown', description: 'Markdown 文档' },
-  { value: 'csv', label: 'CSV', description: '逗号分隔值文件' },
-  { value: 'xlsx', label: 'Excel', description: 'Excel 表格 (.xlsx/.xls)' },
-  { value: 'jpg', label: '图片', description: '图片文件 (.jpg/.jpeg/.png)' },
+  { value: 'pdf', label: 'PDF', description: /* 원문: PDF 文档 */ 'PDF 문서' },
+  { value: 'docx', label: /* 원문: Word */ '워드', description: /* 원문: Word 文档 (.docx/.doc) */ '워드 문서 (.docx/.doc)' },
+  { value: 'txt', label: /* 원문: 文本 */ '텍스트', description: /* 원문: 纯文本文件 (.txt) */ '순수 텍스트 파일 (.txt)' },
+  { value: 'md', label: /* 원문: Markdown */ '마크다운', description: /* 원문: Markdown 文档 */ '마크다운 문서' },
+  { value: 'csv', label: 'CSV', description: /* 원문: 逗号分隔值文件 */ '쉼표로 구분된 값 파일' },
+  { value: 'xlsx', label: /* 원문: Excel */ '엑셀', description: /* 원문: Excel 表格 (.xlsx/.xls) */ '엑셀 스프레드시트 (.xlsx/.xls)' },
+  { value: 'jpg', label: /* 원문: 图片 */ '이미지', description: /* 원문: 图片文件 (.jpg/.jpeg/.png) */ '이미지 파일 (.jpg/.jpeg/.png)' },
 ];
 
 // 占位符相关 - 从 API 获取
@@ -1265,10 +1311,10 @@ const navItems = computed(() => {
     { key: 'model', icon: 'control-platform', label: t('agent.editor.modelConfig') },
   ];
   // 知识库配置（放在工具上面）
-  items.push({ key: 'knowledge', icon: 'folder', label: t('agent.editor.knowledgeConfig') || '知识库' });
+  items.push({ key: 'knowledge', icon: 'folder', label: t('agent.editor.knowledgeConfig') || /* 원문: 知识库 */ '지식 베이스' });
   // Agent模式才显示工具配置
   if (isAgentMode.value) {
-    items.push({ key: 'tools', icon: 'tools', label: t('agent.editor.toolsConfig') || '工具配置' });
+    items.push({ key: 'tools', icon: 'tools', label: t('agent.editor.toolsConfig') || /* 원문: 工具配置 */ '도구 설정' });
   }
   // Agent 模式且沙箱已启用时才显示 Skills 配置（disabled 时无法启用 Skills）
   if (isAgentMode.value && skillsAvailable.value) {
@@ -1276,17 +1322,17 @@ const navItems = computed(() => {
   }
   // 有知识库能力时才显示检索策略
   if (hasKnowledgeBase.value) {
-    items.push({ key: 'retrieval', icon: 'search', label: t('agent.editor.retrievalStrategy') || '检索策略' });
+    items.push({ key: 'retrieval', icon: 'search', label: t('agent.editor.retrievalStrategy') || /* 원문: 检索策略 */ '검색 전략' });
   }
   // 网络搜索（独立菜单）
-  items.push({ key: 'websearch', icon: 'internet', label: t('agent.editor.webSearchConfig') || '网络搜索' });
+  items.push({ key: 'websearch', icon: 'internet', label: t('agent.editor.webSearchConfig') || /* 원문: 网络搜索 */ '웹 검색' });
   // 多轮对话（仅普通模式显示，Agent模式内部自动控制）
   if (!isAgentMode.value) {
-    items.push({ key: 'conversation', icon: 'chat', label: t('agent.editor.conversationSettings') || '多轮对话' });
+    items.push({ key: 'conversation', icon: 'chat', label: t('agent.editor.conversationSettings') || /* 원문: 多轮对话 */ '멀티턴 대화' });
   }
   // 共享管理（仅编辑模式且非内置智能体）
   if (props.mode === 'edit' && props.agent?.id && !props.agent?.is_builtin) {
-    items.push({ key: 'share', icon: 'share', label: t('knowledgeEditor.sidebar.share') || '共享管理' });
+    items.push({ key: 'share', icon: 'share', label: t('knowledgeEditor.sidebar.share') || /* 원문: 共享管理 */ '공유 관리' });
   }
   return items;
 });
@@ -2573,12 +2619,12 @@ const handleSave = async () => {
   if (!isAgentMode.value && hasKnowledgeBase.value) {
     const contextTemplate = formData.value.config.context_template || '';
     if (!hasPlaceholder(contextTemplate, 'contexts')) {
-      MessagePlugin.error(t('agent.editor.contextsMissing') || '开启知识库时，上下文模板必须包含 {{contexts}} 占位符');
+      MessagePlugin.error(t('agent.editor.contextsMissing') || /* 원문: 开启知识库时，上下文模板必须包含 {{contexts}} 占位符 */ '지식 베이스를 사용할 때 컨텍스트 템플릿에는 {{contexts}} 플레이스홀더가 반드시 포함되어야 합니다');
       currentSection.value = 'basic';
       return;
     }
     if (!hasPlaceholder(contextTemplate, 'query')) {
-      MessagePlugin.error(t('agent.editor.queryMissingInContext') || '上下文模板必须包含 {{query}} 占位符');
+      MessagePlugin.error(t('agent.editor.queryMissingInContext') || /* 원문: 上下文模板必须包含 {{query}} 占位符 */ '컨텍스트 템플릿에는 {{query}} 플레이스홀더가 반드시 포함되어야 합니다');
       currentSection.value = 'basic';
       return;
     }
@@ -2588,7 +2634,7 @@ const handleSave = async () => {
   if (isAgentMode.value && hasKnowledgeBase.value) {
     const systemPrompt = formData.value.config.system_prompt || '';
     if (!hasPlaceholder(systemPrompt, 'knowledge_bases')) {
-      MessagePlugin.warning(t('agent.editor.knowledgeBasesMissing') || '建议在系统提示词中包含 {{knowledge_bases}} 占位符，以便模型了解可用的知识库');
+      MessagePlugin.warning(t('agent.editor.knowledgeBasesMissing') || /* 원문: 建议在系统提示词中包含 {{knowledge_bases}} 占位符，以便模型了解可用的知识库 */ '모델이 사용 가능한 지식 베이스를 이해할 수 있도록 시스템 프롬프트에 {{knowledge_bases}} 플레이스홀더를 포함하는 것을 권장합니다');
     }
   }
 
@@ -2598,12 +2644,12 @@ const handleSave = async () => {
     // 只有用户自定义了改写提示词时才校验
     if (rewritePrompt.trim()) {
       if (!hasPlaceholder(rewritePrompt, 'query')) {
-        MessagePlugin.error(t('agent.editor.queryMissingInRewrite') || '改写用户提示词必须包含 {{query}} 占位符');
+        MessagePlugin.error(t('agent.editor.queryMissingInRewrite') || /* 원문: 改写用户提示词必须包含 {{query}} 占位符 */ '재작성 사용자 프롬프트에는 {{query}} 플레이스홀더가 반드시 포함되어야 합니다');
         currentSection.value = 'conversation';
         return;
       }
       if (!hasPlaceholder(rewritePrompt, 'conversation')) {
-        MessagePlugin.error(t('agent.editor.conversationMissing') || '改写用户提示词必须包含 {{conversation}} 占位符');
+        MessagePlugin.error(t('agent.editor.conversationMissing') || /* 원문: 改写用户提示词必须包含 {{conversation}} 占位符 */ '재작성 사용자 프롬프트에는 {{conversation}} 플레이스홀더가 반드시 포함되어야 합니다');
         currentSection.value = 'conversation';
         return;
       }
@@ -2615,7 +2661,7 @@ const handleSave = async () => {
     const fallbackPrompt = formData.value.config.fallback_prompt || '';
     // 只有用户自定义了兜底提示词时才校验
     if (fallbackPrompt.trim() && !hasPlaceholder(fallbackPrompt, 'query')) {
-      MessagePlugin.error(t('agent.editor.queryMissingInFallback') || '兜底提示词必须包含 {{query}} 占位符');
+      MessagePlugin.error(t('agent.editor.queryMissingInFallback') || /* 원문: 兜底提示词必须包含 {{query}} 占位符 */ '폴백 프롬프트에는 {{query}} 플레이스홀더가 반드시 포함되어야 합니다');
       currentSection.value = 'retrieval';
       return;
     }

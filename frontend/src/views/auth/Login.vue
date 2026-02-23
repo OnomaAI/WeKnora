@@ -451,9 +451,9 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 // Import screenshot images
-import screenshot1 from '@/assets/img/screenshot-1.svg'
+import screenshot1 from '@/assets/img/screenshot-1.png'
 import screenshot2 from '@/assets/img/screenshot-2.svg'
-import screenshot4 from '@/assets/img/screenshot-4.svg'
+import screenshot4 from '@/assets/img/screenshot-4.png'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -470,14 +470,14 @@ const slides = [
     description: t('platform.carousel.agenticRagDesc')
   },
   {
-    image: screenshot2,
-    title: t('platform.carousel.hybridSearchTitle'),
-    description: t('platform.carousel.hybridSearchDesc')
-  },
-  {
     image: screenshot1,
     title: t('platform.carousel.smartDocRetrievalTitle'),
     description: t('platform.carousel.smartDocRetrievalDesc')
+  },
+  {
+    image: screenshot2,
+    title: t('platform.carousel.hybridSearchTitle'),
+    description: t('platform.carousel.hybridSearchDesc')
   }
 ]
 
@@ -492,8 +492,8 @@ const showLanguageMenu = ref(false)
 
 // Language options
 const languageOptions = [
-  { value: 'zh-CN', label: '简体中文', shortLabel: '中文', flag: '🇨🇳' },
-  { value: 'en-US', label: 'English', shortLabel: 'EN', flag: '🇺🇸' },
+  { value: 'zh-CN', label: /* 원문: 简体中文 */ '중국어(간체)', shortLabel: /* 원문: 中文 */ '중국어', flag: '🇨🇳' },
+  { value: 'en-US', label: /* 원문: English */ '영어', shortLabel: /* 원문: EN */ '영어', flag: '🇺🇸' },
   { value: 'ru-RU', label: 'Русский', shortLabel: 'RU', flag: '🇷🇺' },
   { value: 'ko-KR', label: '한국어', shortLabel: '한국어', flag: '🇰🇷' }
 ]
@@ -653,7 +653,7 @@ const handleLogin = async () => {
       MessagePlugin.error(response.message || t('auth.loginError'))
     }
   } catch (error: any) {
-    console.error('登录错误:', error)
+    console.error('로그인 오류:', error)
     MessagePlugin.error(error.message || t('auth.loginErrorRetry'))
   } finally {
     loading.value = false
@@ -689,7 +689,7 @@ const handleRegister = async () => {
       MessagePlugin.error(response.message || t('auth.registerFailed'))
     }
   } catch (error: any) {
-    console.error('注册错误:', error)
+    console.error('회원가입 오류:', error)
     MessagePlugin.error(error.message || t('auth.registerError'))
   } finally {
     loading.value = false

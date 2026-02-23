@@ -49,6 +49,33 @@ detect_compose_cmd() {
     return 1
 }
 
+is_true() {
+    local value
+    value="$(echo "${1:-}" | tr '[:upper:]' '[:lower:]')"
+    [ "$value" = "1" ] || [ "$value" = "true" ] || [ "$value" = "yes" ] || [ "$value" = "on" ]
+}
+
+# 兼容旧变量：当 MINIO_ENDPOINT 未设置时，从 MINIO_URL(+MINIO_PORT) 补全
+resolve_minio_endpoint() {
+    local endpoint="${MINIO_ENDPOINT:-}"
+    if [ -z "$endpoint" ] && [ -n "${MINIO_URL:-}" ]; then
+        endpoint="${MINIO_URL}"
+    fi
+    if [ -z "$endpoint" ]; then
+        return
+    fi
+
+    endpoint="${endpoint#http://}"
+    endpoint="${endpoint#https://}"
+    endpoint="${endpoint%%/*}"
+
+    if [[ "$endpoint" != *:* ]]; then
+        endpoint="${endpoint}:${MINIO_PORT:-9000}"
+    fi
+
+    export MINIO_ENDPOINT="$endpoint"
+}
+
 # 显示帮助信息
 show_help() {
     printf "%b\n" "${GREEN}WeKnora 开发环境脚本${NC}"
@@ -117,10 +144,30 @@ start_services() {
         return 1
     fi
     
+    # 加载环境变量
+    set -a
+    source .env
+    set +a
+    resolve_minio_endpoint
+
     # 解析 profile 参数
     shift  # 移除 "start" 命令本身
-    PROFILES="--profile full"
+    PROFILES=""
+    SERVICES="redis docreader"
     ENABLED_SERVICES=""
+
+    local use_external_postgres=false
+    if is_true "${USE_EXTERNAL_POSTGRES:-}"; then
+        use_external_postgres=true
+    elif [ -n "${DB_HOST:-}" ] && [ "${DB_HOST}" != "localhost" ] &&
+        [ "${DB_HOST}" != "127.0.0.1" ] && [ "${DB_HOST}" != "postgres" ]; then
+        use_external_postgres=true
+    fi
+    if [ "$use_external_postgres" = true ]; then
+        log_info "检测到外部 PostgreSQL 配置，跳过本地 postgres 容器"
+    else
+        SERVICES="postgres $SERVICES"
+    fi
     
     while [ $# -gt 0 ]; do
         case "$1" in
@@ -153,13 +200,15 @@ start_services() {
     done
     
     # 启动服务
-    "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD -f docker-compose.dev.yml $PROFILES up -d
+    "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD -f docker-compose.dev.yml $PROFILES up -d $SERVICES
     
     if [ $? -eq 0 ]; then
         log_success "基础设施服务已启动"
         echo ""
         log_info "服务访问地址:"
-        echo "  - PostgreSQL:    localhost:5432"
+        if [[ " $SERVICES " == *" postgres "* ]]; then
+            echo "  - PostgreSQL:    localhost:5432"
+        fi
         echo "  - Redis:         localhost:6379"
         echo "  - DocReader:     localhost:50051"
         
@@ -251,14 +300,20 @@ start_app() {
         return 1
     fi
     
-    # 设置本地开发环境变量（覆盖 Docker 容器地址）
-    export DB_HOST=localhost
-    export DOCREADER_ADDR=localhost:50051
-    export MINIO_ENDPOINT=localhost:9000
-    export REDIS_ADDR=localhost:6379
-    export OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317
-    export NEO4J_URI=bolt://localhost:7687
-    export QDRANT_HOST=localhost
+    # 设置本地开发环境变量（仅在未配置时填充默认值，不覆盖外部基础设施配置）
+    resolve_minio_endpoint
+    export DB_HOST="${DB_HOST:-localhost}"
+    export DOCREADER_ADDR="${DOCREADER_ADDR:-localhost:50051}"
+    export REDIS_ADDR="${REDIS_ADDR:-localhost:6379}"
+    export OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_EXPORTER_OTLP_ENDPOINT:-localhost:4317}"
+    export QDRANT_HOST="${QDRANT_HOST:-localhost}"
+
+    if [ "${STORAGE_TYPE:-local}" = "minio" ] && [ -z "${MINIO_ENDPOINT:-}" ]; then
+        export MINIO_ENDPOINT="localhost:9000"
+    fi
+    if [ "${NEO4J_ENABLE,,}" = "true" ] && [ -z "${NEO4J_URI:-}" ]; then
+        export NEO4J_URI="bolt://localhost:7687"
+    fi
     
     # 确保必要的环境变量已设置
     if [ -z "$DB_DRIVER" ]; then
@@ -343,4 +398,3 @@ case "$CMD" in
 esac
 
 exit 0
-

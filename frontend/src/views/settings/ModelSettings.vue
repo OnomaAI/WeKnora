@@ -329,8 +329,8 @@ const loadModels = async () => {
     const models = await listModels()
     allModels.value = models
   } catch (error: any) {
-    console.error('加载模型列表失败:', error)
-    MessagePlugin.error(error.message || '加载模型列表失败')
+    console.error('모델 목록 불러오기 실패:', error)
+    MessagePlugin.error(error.message || '모델 목록 불러오기에 실패했습니다')
   } finally {
     loading.value = false
   }
@@ -347,7 +347,7 @@ const openAddDialog = (type: 'chat' | 'embedding' | 'rerank' | 'vllm') => {
 const editModel = (type: 'chat' | 'embedding' | 'rerank' | 'vllm', model: any) => {
   // 内置模型不能编辑
   if (model.isBuiltin) {
-    MessagePlugin.warning('内置模型不能编辑')
+    MessagePlugin.warning('내장 모델은 수정할 수 없습니다')
     return
   }
   currentModelType.value = type
@@ -425,7 +425,7 @@ const handleModelSave = async (modelData: any) => {
     // 重新加载模型列表
     await loadModels()
   } catch (error: any) {
-    console.error('保存模型失败:', error)
+    console.error('모델 저장 실패:', error)
     MessagePlugin.error(error.message || t('modelSettings.toasts.saveFailed'))
   }
 }
@@ -435,7 +435,7 @@ const deleteModel = async (type: 'chat' | 'embedding' | 'rerank' | 'vllm', model
   // 检查是否是内置模型
   const model = allModels.value.find(m => m.id === modelId)
   if (model?.is_builtin) {
-    MessagePlugin.warning('内置模型不能删除')
+    MessagePlugin.warning('내장 모델은 삭제할 수 없습니다')
     return
   }
   
@@ -445,7 +445,7 @@ const deleteModel = async (type: 'chat' | 'embedding' | 'rerank' | 'vllm', model
     // 重新加载模型列表
     await loadModels()
   } catch (error: any) {
-    console.error('删除模型失败:', error)
+    console.error('모델 삭제 실패:', error)
     MessagePlugin.error(error.message || t('modelSettings.toasts.deleteFailed'))
   }
 }

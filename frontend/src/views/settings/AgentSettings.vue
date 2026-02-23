@@ -568,7 +568,7 @@
           </div>
         </div>
 
-        <!-- 兜底 Prompt：仅在选择"交给模型继续生成"时展示 -->
+        <!-- 폴백 프롬프트: "모델이 계속 생성하도록" 선택 시에만 표시 (원문: "交给模型继续生成") -->
         <div v-else-if="localFallbackStrategy === 'model'" class="setting-row vertical">
           <div class="setting-info">
             <label>{{ $t('conversationSettings.fallbackPrompt.label') }}</label>
@@ -776,7 +776,7 @@ const saveConversationConfig = async (partial: Partial<ConversationConfig>, toas
       MessagePlugin.success(toastMessage)
     }
   } catch (error) {
-    console.error('保存对话配置失败:', error)
+    console.error('대화 설정 저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
     throw error
   } finally {
@@ -1010,7 +1010,7 @@ onMounted(async () => {
     availablePlaceholders.value = config.available_placeholders || []
     
     // 调试信息
-    console.log('加载的占位符列表:', availablePlaceholders.value)
+    console.log('불러온 플레이스홀더 목록:', availablePlaceholders.value)
     
     // 统一加载所有模型（只调用一次API）
       await loadAllModels()
@@ -1033,7 +1033,7 @@ onMounted(async () => {
         conversationConfigLoaded.value = true
         syncConversationLocals()
       } catch (error) {
-        console.error('加载普通模式配置失败:', error)
+        console.error('일반 모드 설정 불러오기 실패:', error)
         // 使用默认值
         conversationConfigLoaded.value = true
       }
@@ -1050,8 +1050,8 @@ onMounted(async () => {
       setupTextareaEventListeners()
     })
   } catch (error) {
-    console.error('加载Agent配置失败:', error)
-    MessagePlugin.error('加载Agent配置失败')
+    console.error('Agent 설정 불러오기 실패:', error)
+    MessagePlugin.error('Agent 설정을 불러오지 못했습니다')
     configLoaded.value = false // 加载失败时重置标记，允许重试
     
     // 失败时从store加载
@@ -1126,7 +1126,7 @@ const handleMaxIterationsChangeDebounced = (value: number) => {
       lastSavedValue = numValue // 记录已保存的值
     MessagePlugin.success(t('agentSettings.toasts.iterationsSaved'))
   } catch (error) {
-    console.error('保存失败:', error)
+    console.error('저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
     } finally {
       maxIterationsDebounceTimer = null
@@ -1145,8 +1145,8 @@ const loadAllModels = async () => {
     chatModels.value = allModels.filter(m => m.type === 'KnowledgeQA')
     rerankModels.value = allModels.filter(m => m.type === 'Rerank')
   } catch (error) {
-    console.error('加载模型列表失败:', error)
-    MessagePlugin.error('加载模型列表失败')
+    console.error('모델 목록 불러오기 실패:', error)
+    MessagePlugin.error('모델 목록을 불러오지 못했습니다')
   } finally {
     loadingModels.value = false
   }
@@ -1173,7 +1173,7 @@ const handleTemperatureChange = async (value: number) => {
     settingsStore.updateAgentConfig({ temperature: value })
     MessagePlugin.success(t('agentSettings.toasts.temperatureSaved'))
   } catch (error) {
-    console.error('保存失败:', error)
+    console.error('저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
   }
 }
@@ -1402,7 +1402,7 @@ const handleResetToDefault = async () => {
         MessagePlugin.success(t('agentSettings.toasts.resetToDefault'))
         confirmDialog.hide()
       } catch (error) {
-        console.error('恢复默认 Prompt 失败:', error)
+        console.error('기본 프롬프트 복원 실패:', error)
         MessagePlugin.error(getErrorMessage(error))
       } finally {
         isResettingPrompt.value = false
@@ -1446,7 +1446,7 @@ const handleSystemPromptChange = async (e?: FocusEvent) => {
     savedSystemPrompt = localSystemPrompt.value // 更新已保存的值
     MessagePlugin.success(t('agentSettings.toasts.systemPromptSaved'))
   } catch (error) {
-    console.error('保存系统 Prompt 失败:', error)
+    console.error('시스템 프롬프트 저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
   }
 }
@@ -1454,12 +1454,12 @@ const handleSystemPromptChange = async (e?: FocusEvent) => {
 // 监听 Agent 就绪状态变化，同步到 store
 watch(isAgentReady, (newValue, oldValue) => {
   if (!isInitializing.value) {
-    // 如果配置从"就绪"变为"未就绪"，且 Agent 当前是启用状态，自动关闭
+    // 설정이 "준비됨"에서 "준비되지 않음"으로 바뀌고 Agent가 현재 켜져 있으면 자동으로 비활성화
     if (!newValue && oldValue && settingsStore.isAgentEnabled) {
       settingsStore.toggleAgent(false)
       MessagePlugin.warning(t('agentSettings.toasts.autoDisabled'))
     }
-    // 注意：配置从"未就绪"变为"就绪"时，不自动启用（让用户自己决定是否启用）
+    // 참고: 설정이 "준비되지 않음"에서 "준비됨"으로 바뀌어도 자동 활성화하지 않음(사용자가 직접 결정)
   }
 })
 
@@ -1480,7 +1480,7 @@ const handleContextTemplateChange = async () => {
     )
     savedContextTemplate = localContextTemplate.value
   } catch (error) {
-    console.error('保存Context Template失败:', error)
+    console.error('컨텍스트 템플릿 저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
   }
 }
@@ -1507,7 +1507,7 @@ const handleSystemPromptNormalChange = async () => {
     )
     savedSystemPromptNormal = localSystemPromptNormal.value
   } catch (error) {
-    console.error('保存System Prompt失败:', error)
+    console.error('시스템 프롬프트 저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
   }
 }
@@ -1523,7 +1523,7 @@ const handleTemperatureNormalChange = async (value: number) => {
     )
     savedTemperatureNormal = value
   } catch (error) {
-    console.error('保存Temperature失败:', error)
+    console.error('Temperature 저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
   }
 }
@@ -1538,7 +1538,7 @@ const handleMaxCompletionTokensChange = async (value: number) => {
     )
     savedMaxCompletionTokens = value
   } catch (error) {
-    console.error('保存Max Tokens失败:', error)
+    console.error('Max Tokens 저장 실패:', error)
     MessagePlugin.error(getErrorMessage(error))
   }
 }
@@ -1547,7 +1547,7 @@ const handleMaxRoundsChange = async (value: number) => {
   try {
     await saveConversationConfig({ max_rounds: value }, t('conversationSettings.toasts.maxRoundsSaved'))
   } catch (error) {
-    console.error('保存 max_rounds 失败:', error)
+    console.error('max_rounds 저장 실패:', error)
     localMaxRounds.value = conversationConfig.value.max_rounds
   }
 }
@@ -1556,7 +1556,7 @@ const handleEmbeddingTopKChange = async (value: number) => {
   try {
     await saveConversationConfig({ embedding_top_k: value }, t('conversationSettings.toasts.embeddingSaved'))
   } catch (error) {
-    console.error('保存 embedding_top_k 失败:', error)
+    console.error('embedding_top_k 저장 실패:', error)
     localEmbeddingTopK.value = conversationConfig.value.embedding_top_k
   }
 }
@@ -1565,7 +1565,7 @@ const handleKeywordThresholdChange = async (value: number) => {
   try {
     await saveConversationConfig({ keyword_threshold: value }, t('conversationSettings.toasts.keywordThresholdSaved'))
   } catch (error) {
-    console.error('保存 keyword_threshold 失败:', error)
+    console.error('keyword_threshold 저장 실패:', error)
     localKeywordThreshold.value = conversationConfig.value.keyword_threshold
   }
 }
@@ -1574,7 +1574,7 @@ const handleVectorThresholdChange = async (value: number) => {
   try {
     await saveConversationConfig({ vector_threshold: value }, t('conversationSettings.toasts.vectorThresholdSaved'))
   } catch (error) {
-    console.error('保存 vector_threshold 失败:', error)
+    console.error('vector_threshold 저장 실패:', error)
     localVectorThreshold.value = conversationConfig.value.vector_threshold
   }
 }
@@ -1583,7 +1583,7 @@ const handleRerankTopKChange = async (value: number) => {
   try {
     await saveConversationConfig({ rerank_top_k: value }, t('conversationSettings.toasts.rerankTopKSaved'))
   } catch (error) {
-    console.error('保存 rerank_top_k 失败:', error)
+    console.error('rerank_top_k 저장 실패:', error)
     localRerankTopK.value = conversationConfig.value.rerank_top_k
   }
 }
@@ -1592,7 +1592,7 @@ const handleRerankThresholdChange = async (value: number) => {
   try {
     await saveConversationConfig({ rerank_threshold: value }, t('conversationSettings.toasts.rerankThresholdSaved'))
   } catch (error) {
-    console.error('保存 rerank_threshold 失败:', error)
+    console.error('rerank_threshold 저장 실패:', error)
     localRerankThreshold.value = conversationConfig.value.rerank_threshold
   }
 }
@@ -1601,7 +1601,7 @@ const handleEnableRewriteChange = async (value: boolean) => {
   try {
     await saveConversationConfig({ enable_rewrite: value }, t('conversationSettings.toasts.enableRewriteSaved'))
   } catch (error) {
-    console.error('保存 enable_rewrite 失败:', error)
+    console.error('enable_rewrite 저장 실패:', error)
     localEnableRewrite.value = conversationConfig.value.enable_rewrite
   }
 }
@@ -1613,7 +1613,7 @@ const handleEnableQueryExpansionChange = async (value: boolean) => {
       t('conversationSettings.toasts.enableQueryExpansionSaved')
     )
   } catch (error) {
-    console.error('保存 enable_query_expansion 失败:', error)
+    console.error('enable_query_expansion 저장 실패:', error)
     localEnableQueryExpansion.value = conversationConfig.value.enable_query_expansion ?? true
   }
 }
@@ -1622,7 +1622,7 @@ const handleFallbackStrategyChange = async (value: 'fixed' | 'model') => {
   try {
     await saveConversationConfig({ fallback_strategy: value }, t('conversationSettings.toasts.fallbackStrategySaved'))
   } catch (error) {
-    console.error('保存 fallback_strategy 失败:', error)
+    console.error('fallback_strategy 저장 실패:', error)
     localFallbackStrategy.value = (conversationConfig.value.fallback_strategy as 'fixed' | 'model') || 'fixed'
   }
 }
@@ -1632,7 +1632,7 @@ const handleFallbackResponseChange = async () => {
   try {
     await saveConversationConfig({ fallback_response: localFallbackResponse.value }, t('conversationSettings.toasts.fallbackResponseSaved'))
   } catch (error) {
-    console.error('保存 fallback_response 失败:', error)
+    console.error('fallback_response 저장 실패:', error)
     localFallbackResponse.value = conversationConfig.value.fallback_response ?? ''
   }
 }
@@ -1642,7 +1642,7 @@ const handleRewritePromptSystemChange = async () => {
   try {
     await saveConversationConfig({ rewrite_prompt_system: localRewritePromptSystem.value }, t('conversationSettings.toasts.rewritePromptSystemSaved'))
   } catch (error) {
-    console.error('保存 rewrite_prompt_system 失败:', error)
+    console.error('rewrite_prompt_system 저장 실패:', error)
     localRewritePromptSystem.value = conversationConfig.value.rewrite_prompt_system ?? ''
   }
 }
@@ -1652,7 +1652,7 @@ const handleRewritePromptUserChange = async () => {
   try {
     await saveConversationConfig({ rewrite_prompt_user: localRewritePromptUser.value }, t('conversationSettings.toasts.rewritePromptUserSaved'))
   } catch (error) {
-    console.error('保存 rewrite_prompt_user 失败:', error)
+    console.error('rewrite_prompt_user 저장 실패:', error)
     localRewritePromptUser.value = conversationConfig.value.rewrite_prompt_user ?? ''
   }
 }
@@ -1662,7 +1662,7 @@ const handleFallbackPromptChange = async () => {
   try {
     await saveConversationConfig({ fallback_prompt: localFallbackPrompt.value }, t('conversationSettings.toasts.fallbackPromptSaved'))
   } catch (error) {
-    console.error('保存 fallback_prompt 失败:', error)
+    console.error('fallback_prompt 저장 실패:', error)
     localFallbackPrompt.value = conversationConfig.value.fallback_prompt ?? ''
   }
 }
@@ -1725,7 +1725,7 @@ const handleConversationSummaryModelChange = async (value: string) => {
   try {
     await saveConversationConfig({ summary_model_id: value }, t('conversationSettings.toasts.chatModelSaved'))
   } catch (error) {
-    console.error('保存 summary_model_id 失败:', error)
+    console.error('summary_model_id 저장 실패:', error)
     localSummaryModelId.value = conversationConfig.value.summary_model_id ?? ''
   }
 }
@@ -1740,7 +1740,7 @@ const handleConversationRerankModelChange = async (value: string) => {
   try {
     await saveConversationConfig({ rerank_model_id: value }, t('conversationSettings.toasts.rerankModelSaved'))
   } catch (error) {
-    console.error('保存 rerank_model_id 失败:', error)
+    console.error('rerank_model_id 저장 실패:', error)
     localConversationRerankModelId.value = conversationConfig.value.rerank_model_id ?? ''
   }
 }
@@ -2278,4 +2278,3 @@ const handleConversationRerankModelChange = async (value: string) => {
 }
 
 </style>
-

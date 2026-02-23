@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net"
 	"net/url"
 	"os"
 	"slices"
@@ -372,6 +373,32 @@ func initDatabase(cfg *config.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
+func resolveMinioEndpointFromEnv() string {
+	endpoint := strings.TrimSpace(os.Getenv("MINIO_ENDPOINT"))
+	if endpoint == "" {
+		endpoint = strings.TrimSpace(os.Getenv("MINIO_URL"))
+	}
+	if endpoint == "" {
+		return ""
+	}
+
+	endpoint = strings.TrimPrefix(endpoint, "http://")
+	endpoint = strings.TrimPrefix(endpoint, "https://")
+	endpoint = strings.SplitN(endpoint, "/", 2)[0]
+	if endpoint == "" {
+		return ""
+	}
+	if strings.Contains(endpoint, ":") {
+		return endpoint
+	}
+
+	port := strings.TrimSpace(os.Getenv("MINIO_PORT"))
+	if port == "" {
+		port = "9000"
+	}
+	return net.JoinHostPort(endpoint, port)
+}
+
 // initFileService initializes file storage service
 // Creates the appropriate file storage service based on configuration
 // Supports multiple storage backends (MinIO, COS, local filesystem)
@@ -384,14 +411,15 @@ func initDatabase(cfg *config.Config) (*gorm.DB, error) {
 func initFileService(cfg *config.Config) (interfaces.FileService, error) {
 	switch os.Getenv("STORAGE_TYPE") {
 	case "minio":
-		if os.Getenv("MINIO_ENDPOINT") == "" ||
+		minioEndpoint := resolveMinioEndpointFromEnv()
+		if minioEndpoint == "" ||
 			os.Getenv("MINIO_ACCESS_KEY_ID") == "" ||
 			os.Getenv("MINIO_SECRET_ACCESS_KEY") == "" ||
 			os.Getenv("MINIO_BUCKET_NAME") == "" {
 			return nil, fmt.Errorf("missing MinIO configuration")
 		}
 		return file.NewMinioFileService(
-			os.Getenv("MINIO_ENDPOINT"),
+			minioEndpoint,
 			os.Getenv("MINIO_ACCESS_KEY_ID"),
 			os.Getenv("MINIO_SECRET_ACCESS_KEY"),
 			os.Getenv("MINIO_BUCKET_NAME"),

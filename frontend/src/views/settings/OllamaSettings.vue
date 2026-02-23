@@ -235,7 +235,7 @@ const refreshModels = async () => {
     const models = await listOllamaModels()
     downloadedModels.value = models
   } catch (error: any) {
-    console.error('获取模型列表失败:', error)
+    console.error('모델 목록 불러오기 실패:', error)
     MessagePlugin.error(error.message || t('ollamaSettings.toasts.listFailed'))
   } finally {
     loadingModels.value = false
@@ -253,21 +253,21 @@ const formatSize = (bytes: number): string => {
 
 // 格式化日期
 const formatDate = (dateStr: string): string => {
-  if (!dateStr) return '未知'
+  if (!dateStr) return '알 수 없음'
   
   const date = new Date(dateStr)
   // 检查日期是否有效
-  if (isNaN(date.getTime())) return '未知'
+  if (isNaN(date.getTime())) return '알 수 없음'
   
   const now = new Date()
   const diff = now.getTime() - date.getTime()
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
   
-  if (days === 0) return '今天'
-  if (days === 1) return '昨天'
-  if (days < 7) return `${days} 天前`
-  if (days < 0) return date.toLocaleDateString('zh-CN')
-  return date.toLocaleDateString('zh-CN')
+  if (days === 0) return '오늘'
+  if (days === 1) return '어제'
+  if (days < 7) return `${days}일 전`
+  if (days < 0) return date.toLocaleDateString('ko-KR')
+  return date.toLocaleDateString('ko-KR')
 }
 
 // 下载模型
@@ -318,7 +318,7 @@ const downloadModel = async () => {
       }
     }, 1000)
   } catch (error: any) {
-    console.error('下载失败:', error)
+    console.error('다운로드 실패:', error)
     MessagePlugin.error(error.message || t('ollamaSettings.toasts.downloadFailed'))
     downloading.value = false
     downloadProgress.value = 0
@@ -349,7 +349,7 @@ const initOllamaBaseUrl = async () => {
     
     return result
   } catch (error) {
-    console.error('初始化 Ollama 地址失败:', error)
+    console.error('Ollama 주소 초기화 실패:', error)
     // 如果获取失败，使用默认值或 store 中的值
     if (!localBaseUrl.value) {
       localBaseUrl.value = 'http://localhost:11434'

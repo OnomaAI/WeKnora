@@ -464,25 +464,25 @@
       <div v-if="sharedDetailVisible && currentSharedAgent" class="shared-detail-drawer-overlay" @click.self="closeSharedAgentDetail">
         <div class="shared-detail-drawer">
           <div class="shared-detail-drawer-header">
-            <h3 class="shared-detail-drawer-title">{{ $t('agent.detail.title') || '智能体详情' }}</h3>
+            <h3 class="shared-detail-drawer-title">{{ $t('agent.detail.title') || /* 원문: 智能体详情 */ '에이전트 상세' }}</h3>
             <button type="button" class="shared-detail-drawer-close" @click="closeSharedAgentDetail" :aria-label="$t('general.close')">
               <t-icon name="close" />
             </button>
           </div>
           <div class="shared-detail-drawer-body">
             <div class="shared-detail-row">
-              <span class="shared-detail-label">{{ $t('agent.editor.name') || '名称' }}</span>
+              <span class="shared-detail-label">{{ $t('agent.editor.name') || /* 원문: 名称 */ '이름' }}</span>
               <span class="shared-detail-value">{{ currentSharedAgent.agent?.name }}</span>
             </div>
             <div class="shared-detail-row">
-              <span class="shared-detail-label">{{ $t('knowledgeList.detail.sourceOrg') || '来源空间' }}</span>
+              <span class="shared-detail-label">{{ $t('knowledgeList.detail.sourceOrg') || /* 원문: 来源空间 */ '출처 공간' }}</span>
               <span class="shared-detail-value shared-detail-org">
                 <img src="@/assets/img/organization-green.svg" class="shared-detail-org-icon" alt="" aria-hidden="true" />
                 <span>{{ currentSharedAgent.org_name }}</span>
               </span>
             </div>
             <div class="shared-detail-row">
-              <span class="shared-detail-label">{{ $t('knowledgeList.detail.myPermission') || '我的权限' }}</span>
+              <span class="shared-detail-label">{{ $t('knowledgeList.detail.myPermission') || /* 원문: 我的权限 */ '내 권한' }}</span>
               <span class="shared-detail-value">{{ $t('organization.share.permissionReadonly') }}</span>
             </div>
             <!-- 能力范围（与共享范围说明一致） -->
@@ -512,7 +512,7 @@
           </div>
           <div class="shared-detail-drawer-footer">
             <t-button theme="primary" block @click="handleUseSharedAgentInChat(currentSharedAgent)">
-              {{ $t('agent.detail.useInChat') || '在对话中使用' }}
+              {{ $t('agent.detail.useInChat') || /* 원문: 在对话中使用 */ '대화에서 사용' }}
             </t-button>
           </div>
         </div>
@@ -799,11 +799,11 @@ async function handleUseSharedAgentInChat(shared: SharedAgentInfo) {
         query: { agent_id: shared.agent.id, source_tenant_id: String(shared.source_tenant_id) }
       })
     } else {
-      MessagePlugin.error(t('createChat.messages.createFailed') || '创建会话失败')
+      MessagePlugin.error(t('createChat.messages.createFailed') || /* 원문: 创建会话失败 */ '세션 생성에 실패했습니다')
     }
   } catch (e) {
     console.error('Create session for shared agent failed', e)
-    MessagePlugin.error(t('createChat.messages.createError') || '创建会话出错')
+    MessagePlugin.error(t('createChat.messages.createError') || /* 원문: 创建会话出错 */ '세션 생성 중 오류가 발생했습니다')
   }
 }
 
