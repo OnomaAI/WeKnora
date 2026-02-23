@@ -183,7 +183,7 @@ const loadOriginalContent = async () => {
   if (!props.details.id || !props.details.type || props.details.type !== 'file') return;
   const fileType = props.details.file_type?.toLowerCase();
   if (!isTextFile(fileType)) {
-    MessagePlugin.warning(t('knowledgeBase.originalFileNotSupported') || '该文件类型不支持原文件展示，请下载查看');
+    MessagePlugin.warning(t('knowledgeBase.originalFileNotSupported') || /* 원문: 该文件类型不支持原文件展示，请下载查看 */ '해당 파일 형식은 원본 미리보기를 지원하지 않습니다. 다운로드하여 확인해 주세요');
     return;
   }
   loadingOriginal.value = true;
@@ -193,7 +193,7 @@ const loadOriginalContent = async () => {
     originalContent.value = text;
   } catch (error: any) {
     console.error('Failed to load original content:', error);
-    MessagePlugin.error(error?.message || t('knowledgeBase.loadOriginalFailed') || '加载原文件内容失败');
+    MessagePlugin.error(error?.message || t('knowledgeBase.loadOriginalFailed') || /* 원문: 加载原文件内容失败 */ '원본 파일 내용을 불러오지 못했습니다');
   } finally {
     loadingOriginal.value = false;
   }
@@ -271,11 +271,11 @@ const getDisplayTitle = () => {
 const getTypeLabel = () => {
   switch (props.details.type) {
     case 'url':
-      return t('knowledgeBase.typeURL') || '网页';
+      return t('knowledgeBase.typeURL') || /* 원문: 网页 */ '웹페이지';
     case 'manual':
-      return t('knowledgeBase.typeManual') || '手动创建';
+      return t('knowledgeBase.typeManual') || /* 원문: 手动创建 */ '수동 생성';
     case 'file':
-      return props.details.file_type ? props.details.file_type.toUpperCase() : t('knowledgeBase.typeFile') || '文件';
+      return props.details.file_type ? props.details.file_type.toUpperCase() : t('knowledgeBase.typeFile') || /* 원문: 文件 */ '파일';
     default:
       return '';
   }
@@ -299,12 +299,12 @@ const getTypeTheme = () => {
 const getContentLabel = () => {
   switch (props.details.type) {
     case 'url':
-      return t('knowledgeBase.webContent') || '网页内容';
+      return t('knowledgeBase.webContent') || /* 원문: 网页内容 */ '웹페이지 내용';
     case 'manual':
-      return t('knowledgeBase.documentContent') || '文档内容';
+      return t('knowledgeBase.documentContent') || /* 원문: 文档内容 */ '문서 내용';
     case 'file':
     default:
-      return t('knowledgeBase.fileContent') || '文件内容';
+      return t('knowledgeBase.fileContent') || /* 원문: 文件内容 */ '파일 내용';
   }
 };
 
@@ -312,12 +312,12 @@ const getContentLabel = () => {
 const getTimeLabel = () => {
   switch (props.details.type) {
     case 'url':
-      return t('knowledgeBase.importTime') || '导入时间';
+      return t('knowledgeBase.importTime') || /* 원문: 导入时间 */ '가져온 시간';
     case 'manual':
-      return t('knowledgeBase.createTime') || '创建时间';
+      return t('knowledgeBase.createTime') || /* 원문: 创建时间 */ '생성 시간';
     case 'file':
     default:
-      return t('knowledgeBase.uploadTime') || '上传时间';
+      return t('knowledgeBase.uploadTime') || /* 원문: 上传时间 */ '업로드 시간';
   }
 };
 
@@ -331,7 +331,7 @@ const getChunkMeta = (item: any) => {
   if (!item) return '';
   const parts = [];
   if (item.char_count) {
-    parts.push(`${item.char_count} ${t('knowledgeBase.characters') || '字符'}`);
+    parts.push(`${item.char_count} ${t('knowledgeBase.characters') || /* 원문: 字符 */ '문자'}`);
   }
   if (item.token_count) {
     parts.push(`${item.token_count} tokens`);
@@ -385,27 +385,27 @@ const deletingQuestion = ref<{ chunkIndex: number; questionId: string } | null>(
 // 删除生成的问题
 const handleDeleteQuestion = async (item: any, chunkIndex: number, question: GeneratedQuestion) => {
   if (!item || !item.id) {
-    MessagePlugin.error(t('common.error') || '操作失败');
+    MessagePlugin.error(t('common.error') || /* 원문: 操作失败 */ '작업에 실패했습니다');
     return;
   }
 
   // 检查是否是旧格式数据（无法删除）
   if (question.id.startsWith('legacy-')) {
-    MessagePlugin.warning(t('knowledgeBase.legacyQuestionCannotDelete') || '旧格式问题无法删除，请重新生成问题');
+    MessagePlugin.warning(t('knowledgeBase.legacyQuestionCannotDelete') || /* 원문: 旧格式问题无法删除，请重新生成问题 */ '구버전 형식의 질문은 삭제할 수 없습니다. 질문을 다시 생성해 주세요');
     return;
   }
 
   const confirmDialog = DialogPlugin.confirm({
-    header: t('common.confirmDelete') || '确认删除',
-    body: t('knowledgeBase.confirmDeleteQuestion') || '确定要删除这个问题吗？删除后将同时移除对应的向量索引。',
-    confirmBtn: t('common.confirm') || '确认',
-    cancelBtn: t('common.cancel') || '取消',
+    header: t('common.confirmDelete') || /* 원문: 确认删除 */ '삭제 확인',
+    body: t('knowledgeBase.confirmDeleteQuestion') || /* 원문: 确定要删除这个问题吗？删除后将同时移除对应的向量索引。 */ '이 질문을 삭제하시겠습니까? 삭제하면 연결된 벡터 인덱스도 함께 제거됩니다.',
+    confirmBtn: t('common.confirm') || /* 원문: 确认 */ '확인',
+    cancelBtn: t('common.cancel') || /* 원문: 取消 */ '취소',
     onConfirm: async () => {
       confirmDialog.hide();
       deletingQuestion.value = { chunkIndex, questionId: question.id };
       try {
         await deleteGeneratedQuestion(item.id, question.id);
-        MessagePlugin.success(t('common.deleteSuccess') || '删除成功');
+        MessagePlugin.success(t('common.deleteSuccess') || /* 원문: 删除成功 */ '삭제되었습니다');
         
         // 更新本地数据
         const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : item.metadata;
@@ -420,7 +420,7 @@ const handleDeleteQuestion = async (item: any, chunkIndex: number, question: Gen
         // 通知父组件刷新数据
         emit('questionDeleted', { chunkId: item.id, questionId: question.id });
       } catch (error: any) {
-        MessagePlugin.error(error?.message || t('common.deleteFailed') || '删除失败');
+        MessagePlugin.error(error?.message || t('common.deleteFailed') || /* 원문: 删除失败 */ '삭제에 실패했습니다');
       } finally {
         deletingQuestion.value = null;
       }
@@ -498,7 +498,7 @@ const handleDetailsScroll = () => {
       
       <!-- URL类型专属区域 -->
       <div v-else-if="details.type === 'url'" class="url_box">
-        <span class="label">{{ $t('knowledgeBase.urlSource') || '来源网址' }}</span>
+        <span class="label">{{ $t('knowledgeBase.urlSource') || /* 원문: 来源网址 */ '출처 URL' }}</span>
         <div class="url_link_box">
           <a :href="details.source" target="_blank" class="url_link">
             <t-icon name="link" size="14px" />
@@ -510,7 +510,7 @@ const handleDetailsScroll = () => {
       
       <!-- 手动创建类型专属区域 -->
       <div v-else-if="details.type === 'manual'" class="manual_box">
-        <span class="label">{{ $t('knowledgeBase.documentTitle') || '文档标题' }}</span>
+        <span class="label">{{ $t('knowledgeBase.documentTitle') || /* 원문: 文档标题 */ '문서 제목' }}</span>
         <div class="manual_title_box">
           <span class="manual_title">{{ details.title }}</span>
         </div>
@@ -521,7 +521,7 @@ const handleDetailsScroll = () => {
           <div class="title-row">
             <span class="label">{{ getContentLabel() }}</span>
             <span v-if="details.total > 0" class="chunk-count">
-              {{ $t('knowledgeBase.chunkCount', { count: details.total }) || `共 ${details.total} 个片段` }}
+              {{ $t('knowledgeBase.chunkCount', { count: details.total }) || `${details.total}개 청크` }}
             </span>
           </div>
           <div class="meta-row">
@@ -534,7 +534,7 @@ const handleDetailsScroll = () => {
                 @click="viewMode = 'merged'"
                 class="view-mode-btn"
               >
-                {{ $t('knowledgeBase.viewMerged') || '全文' }}
+                {{ $t('knowledgeBase.viewMerged') || /* 원문: 全文 */ '전체' }}
               </t-button>
               <t-button 
                 size="small" 
@@ -543,7 +543,7 @@ const handleDetailsScroll = () => {
                 @click="viewMode = 'chunks'"
                 class="view-mode-btn"
               >
-                {{ $t('knowledgeBase.viewChunks') || '分块' }}
+                {{ $t('knowledgeBase.viewChunks') || /* 원문: 分块 */ '청크' }}
               </t-button>
 
             </div>
@@ -567,7 +567,7 @@ const handleDetailsScroll = () => {
             :class="getChunkClass(index)"
           >
             <div class="chunk-header">
-              <span class="chunk-index">{{ $t('knowledgeBase.segment') || '片段' }} {{ index + 1 }}</span>
+              <span class="chunk-index">{{ $t('knowledgeBase.segment') || /* 원문: 片段 */ '청크' }} {{ index + 1 }}</span>
               <div class="chunk-header-right">
                 <t-tag 
                   v-if="getGeneratedQuestions(item).length > 0" 
@@ -575,7 +575,7 @@ const handleDetailsScroll = () => {
                   theme="success" 
                   variant="light"
                 >
-                  {{ $t('knowledgeBase.questions') || '问题' }} {{ getGeneratedQuestions(item).length }}
+                  {{ $t('knowledgeBase.questions') || /* 원문: 问题 */ '질문' }} {{ getGeneratedQuestions(item).length }}
                 </t-tag>
                 <span class="chunk-meta">{{ getChunkMeta(item) }}</span>
               </div>
@@ -586,7 +586,7 @@ const handleDetailsScroll = () => {
             <div v-if="getGeneratedQuestions(item).length > 0" class="questions-section">
               <div class="questions-toggle" @click="toggleQuestions(index)">
                 <t-icon :name="isExpanded(index) ? 'chevron-down' : 'chevron-right'" size="14px" />
-                <span>{{ $t('knowledgeBase.generatedQuestions') || '生成的问题' }} ({{ getGeneratedQuestions(item).length }})</span>
+                <span>{{ $t('knowledgeBase.generatedQuestions') || /* 원문: 生成的问题 */ '생성된 질문' }} ({{ getGeneratedQuestions(item).length }})</span>
               </div>
               <div v-show="isExpanded(index)" class="questions-list">
                 <div 

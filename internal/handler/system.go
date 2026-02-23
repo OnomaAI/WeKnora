@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"net"
 	"os"
 	"strings"
 
@@ -175,11 +176,37 @@ func (h *SystemHandler) supportsRetrieverType(driver string, retrieverType types
 // isMinioEnabled checks if MinIO is enabled
 func (h *SystemHandler) isMinioEnabled() bool {
 	// Check if all required MinIO environment variables are set
-	endpoint := os.Getenv("MINIO_ENDPOINT")
+	endpoint := resolveMinioEndpointFromEnv()
 	accessKeyID := os.Getenv("MINIO_ACCESS_KEY_ID")
 	secretAccessKey := os.Getenv("MINIO_SECRET_ACCESS_KEY")
 
 	return endpoint != "" && accessKeyID != "" && secretAccessKey != ""
+}
+
+func resolveMinioEndpointFromEnv() string {
+	endpoint := strings.TrimSpace(os.Getenv("MINIO_ENDPOINT"))
+	if endpoint == "" {
+		endpoint = strings.TrimSpace(os.Getenv("MINIO_URL"))
+	}
+	if endpoint == "" {
+		return ""
+	}
+
+	endpoint = strings.TrimPrefix(endpoint, "http://")
+	endpoint = strings.TrimPrefix(endpoint, "https://")
+	endpoint = strings.SplitN(endpoint, "/", 2)[0]
+	if endpoint == "" {
+		return ""
+	}
+	if strings.Contains(endpoint, ":") {
+		return endpoint
+	}
+
+	port := strings.TrimSpace(os.Getenv("MINIO_PORT"))
+	if port == "" {
+		port = "9000"
+	}
+	return net.JoinHostPort(endpoint, port)
 }
 
 // MinioBucketInfo represents bucket information with access policy
@@ -219,7 +246,7 @@ func (h *SystemHandler) ListMinioBuckets(c *gin.Context) {
 	}
 
 	// Get MinIO configuration from environment
-	endpoint := os.Getenv("MINIO_ENDPOINT")
+	endpoint := resolveMinioEndpointFromEnv()
 	accessKeyID := os.Getenv("MINIO_ACCESS_KEY_ID")
 	secretAccessKey := os.Getenv("MINIO_SECRET_ACCESS_KEY")
 	useSSL := os.Getenv("MINIO_USE_SSL") == "true"

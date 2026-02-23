@@ -117,7 +117,7 @@ const menuVisible = ref(false)
 
 // 用户信息
 const userInfo = ref({
-  username: '用户',
+  username: /* 원문: 用户 */ '사용자',
   email: 'user@example.com',
   avatar: ''
 })
@@ -184,7 +184,7 @@ const handleLogout = async () => {
     await logoutApi()
   } catch (error) {
     // 即使API调用失败，也继续执行本地清理
-    console.error('注销API调用失败:', error)
+    console.error('로그아웃 API 호출 실패:', error)
   }
   
   // 清理所有状态和本地存储
@@ -435,4 +435,3 @@ onUnmounted(() => {
   transform: translateY(0);
 }
 </style>
-

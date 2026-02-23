@@ -7,12 +7,13 @@
         class="result-row"
       >
         <div class="result-row__index">#{{ index + 1 }}</div>
-        <div class="result-row__title">{{ result.knowledge_title || 'Untitled' }}</div>
+        <div class="result-row__title">{{ result.knowledge_title || '제목 없음' }}</div>
       </div>
     </div>
 
     <div v-else class="empty-state">
-      未找到匹配的内容
+      <!-- 원문: 未找到匹配的内容 -->
+      일치하는 내용을 찾지 못했습니다
     </div>
   </div>
 </template>

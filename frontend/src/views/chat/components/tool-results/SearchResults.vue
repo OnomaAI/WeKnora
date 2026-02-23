@@ -97,23 +97,37 @@ const hasOtherParams = computed(() => {
 
 
 const getRelevanceClass = (level: RelevanceLevel): string => {
-  const classMap: Record<RelevanceLevel, string> = {
-    '高相关': 'high',
-    '中相关': 'medium',
-    '低相关': 'low',
-    '弱相关': 'weak',
+  const normalizedLevel =
+    level === '高相关' ? /* 원문: 高相关 */ '높은 관련성' :
+    level === '中相关' ? /* 원문: 中相关 */ '중간 관련성' :
+    level === '低相关' ? /* 원문: 低相关 */ '낮은 관련성' :
+    level === '弱相关' ? /* 원문: 弱相关 */ '약한 관련성' :
+    level;
+
+  const classMap: Record<string, string> = {
+    '높은 관련성': 'high',
+    '중간 관련성': 'medium',
+    '낮은 관련성': 'low',
+    '약한 관련성': 'weak',
   };
-  return classMap[level] || 'weak';
+  return classMap[normalizedLevel] || 'weak';
 };
 
 const getRelevanceLabel = (level: RelevanceLevel): string => {
-  const labelMap: Record<RelevanceLevel, string> = {
-    '高相关': t('chat.relevanceHigh'),
-    '中相关': t('chat.relevanceMedium'),
-    '低相关': t('chat.relevanceLow'),
-    '弱相关': t('chat.relevanceWeak'),
+  const normalizedLevel =
+    level === '高相关' ? /* 원문: 高相关 */ '높은 관련성' :
+    level === '中相关' ? /* 원문: 中相关 */ '중간 관련성' :
+    level === '低相关' ? /* 원문: 低相关 */ '낮은 관련성' :
+    level === '弱相关' ? /* 원문: 弱相关 */ '약한 관련성' :
+    level;
+
+  const labelMap: Record<string, string> = {
+    '높은 관련성': t('chat.relevanceHigh'),
+    '중간 관련성': t('chat.relevanceMedium'),
+    '낮은 관련성': t('chat.relevanceLow'),
+    '약한 관련성': t('chat.relevanceWeak'),
   };
-  return labelMap[level] || level;
+  return labelMap[normalizedLevel] || normalizedLevel;
 };
 </script>
 
@@ -244,5 +258,4 @@ code {
   border-radius: 2px;
 }
 </style>
-
 

@@ -15,7 +15,7 @@
             <t-loading size="small" />
           </div>
           <div v-else-if="templates.length === 0" class="template-empty">
-            {{ $t('promptTemplate.noTemplates') || '暂无模板' }}
+            {{ $t('promptTemplate.noTemplates') || /* 원문: 暂无模板 */ '템플릿이 없습니다' }}
           </div>
           <div v-else class="template-list">
             <div

@@ -1142,7 +1142,7 @@ function copyPreviewSpaceId() {
       MessagePlugin.success(t('common.copied'))
     }
   } catch {
-    MessagePlugin.error('复制失败')
+    MessagePlugin.error('복사 실패')
   }
 }
 

@@ -61,6 +61,7 @@ log_success() {
 # 选择可用的 Docker Compose 命令（优先 docker compose，其次 docker-compose）
 DOCKER_COMPOSE_BIN=""
 DOCKER_COMPOSE_SUBCMD=""
+DOCKER_LOG_SERVICES="app docreader redis postgres"
 
 detect_compose_cmd() {
 	# 优先使用 Docker Compose 插件
@@ -81,6 +82,34 @@ detect_compose_cmd() {
 
 	# 都不可用
 	return 1
+}
+
+is_true() {
+    local value
+    value="$(echo "${1:-}" | tr '[:upper:]' '[:lower:]')"
+    [ "$value" = "1" ] || [ "$value" = "true" ] || [ "$value" = "yes" ] || [ "$value" = "on" ]
+}
+
+# 兼容旧变量：当 MINIO_ENDPOINT 未设置时，从 MINIO_URL(+MINIO_PORT) 补全
+resolve_minio_endpoint() {
+    local endpoint="${MINIO_ENDPOINT:-}"
+    if [ -z "$endpoint" ] && [ -n "${MINIO_URL:-}" ]; then
+        endpoint="${MINIO_URL}"
+    fi
+    if [ -z "$endpoint" ]; then
+        return
+    fi
+
+    endpoint="${endpoint#http://}"
+    endpoint="${endpoint#https://}"
+    endpoint="${endpoint%%/*}"
+
+    if [[ "$endpoint" != *:* ]]; then
+        endpoint="${endpoint}:${MINIO_PORT:-9000}"
+    fi
+
+    MINIO_ENDPOINT="$endpoint"
+    export MINIO_ENDPOINT
 }
 
 # 检查并创建.env文件
@@ -349,26 +378,78 @@ start_docker() {
     # 检查.env文件
     check_env_file
     
-    # 读取.env文件
-    source "$PROJECT_ROOT/.env"
-    storage_type=${STORAGE_TYPE:-local}
+	# 读取.env文件
+	source "$PROJECT_ROOT/.env"
+	storage_type=${STORAGE_TYPE:-local}
+    resolve_minio_endpoint
+
+    local use_external_postgres=false
+    if is_true "${USE_EXTERNAL_POSTGRES:-}"; then
+        use_external_postgres=true
+    elif [ -n "${DB_HOST:-}" ] && [ "${DB_HOST}" != "postgres" ]; then
+        use_external_postgres=true
+    fi
+
+    local use_external_minio=false
+    if [ "$storage_type" = "minio" ]; then
+        if is_true "${USE_EXTERNAL_MINIO:-}"; then
+            use_external_minio=true
+        elif [ -n "${MINIO_ENDPOINT:-}" ] && [ "${MINIO_ENDPOINT}" != "minio:9000" ]; then
+            use_external_minio=true
+        fi
+    fi
+
+    local neo4j_enabled=false
+    if is_true "${NEO4J_ENABLE:-false}"; then
+        neo4j_enabled=true
+    fi
+
+    local use_external_neo4j=false
+    if [ "$neo4j_enabled" = true ]; then
+        if is_true "${USE_EXTERNAL_NEO4J:-}"; then
+            use_external_neo4j=true
+        elif [ -n "${NEO4J_URI:-}" ] && [[ "${NEO4J_URI}" != *"neo4j:7687"* ]]; then
+            use_external_neo4j=true
+        fi
+    fi
     
     check_platform
     
-    # 进入项目根目录再执行docker-compose命令
-    cd "$PROJECT_ROOT"
-    
-    # 启动基本服务
-    log_info "启动核心服务容器..."
+	# 进入项目根目录再执行docker-compose命令
+	cd "$PROJECT_ROOT"
+
+    local profiles=()
+    if [ "$use_external_postgres" = true ]; then
+        log_info "检测到外部 PostgreSQL 配置，跳过本地 postgres 容器"
+    else
+        profiles+=(--profile postgres)
+    fi
+    if [ "$storage_type" = "minio" ]; then
+        if [ "$use_external_minio" = true ]; then
+            log_info "检测到外部 MinIO 配置，跳过本地 minio 容器"
+        else
+            profiles+=(--profile minio)
+        fi
+    fi
+    if [ "$neo4j_enabled" = true ]; then
+        if [ "$use_external_neo4j" = true ]; then
+            log_info "检测到外部 Neo4j 配置，跳过本地 neo4j 容器"
+        else
+            profiles+=(--profile neo4j)
+        fi
+    fi
+
+	# 启动核心服务
+	log_info "启动核心服务容器..."
 	# 统一通过已检测到的 Compose 命令启动
 	if [ "$NO_PULL" = true ]; then
 		# 不拉取镜像，使用本地镜像
 		log_info "跳过镜像拉取，使用本地镜像..."
-		PLATFORM=$PLATFORM "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD up --build -d
+		PLATFORM=$PLATFORM "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD "${profiles[@]}" up --build -d
 	else
 		# 拉取最新镜像
 		log_info "拉取最新镜像..."
-		PLATFORM=$PLATFORM "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD up --pull always -d
+		PLATFORM=$PLATFORM "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD "${profiles[@]}" up --pull always -d
 	fi
     if [ $? -ne 0 ]; then
         log_error "Docker容器启动失败"
@@ -377,12 +458,23 @@ start_docker() {
     
     log_success "所有Docker容器已成功启动"
 
-    # 显示容器状态
-    log_info "当前容器状态:"
+	# 显示容器状态
+	log_info "当前容器状态:"
 	"$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD ps
 
-    # 预拉取Sandbox镜像（Agent Skills 执行所需，仅拉取不启动）
-    ensure_sandbox_image
+    DOCKER_LOG_SERVICES="app docreader redis"
+    if [ "$use_external_postgres" = false ]; then
+        DOCKER_LOG_SERVICES="$DOCKER_LOG_SERVICES postgres"
+    fi
+    if [ "$storage_type" = "minio" ] && [ "$use_external_minio" = false ]; then
+        DOCKER_LOG_SERVICES="$DOCKER_LOG_SERVICES minio"
+    fi
+    if [ "$neo4j_enabled" = true ] && [ "$use_external_neo4j" = false ]; then
+        DOCKER_LOG_SERVICES="$DOCKER_LOG_SERVICES neo4j"
+    fi
+
+	# 预拉取Sandbox镜像（Agent Skills 执行所需，仅拉取不启动）
+	ensure_sandbox_image
 
     return 0
 }
@@ -445,18 +537,48 @@ pull_images() {
     # 检查.env文件
     check_env_file
     
-    # 读取.env文件
-    source "$PROJECT_ROOT/.env"
-    storage_type=${STORAGE_TYPE:-local}
+	# 读取.env文件
+	source "$PROJECT_ROOT/.env"
+	storage_type=${STORAGE_TYPE:-local}
+    resolve_minio_endpoint
+
+    local profiles=()
+    if is_true "${USE_EXTERNAL_POSTGRES:-}"; then
+        log_info "USE_EXTERNAL_POSTGRES=true，跳过拉取本地 postgres 镜像"
+    elif [ -n "${DB_HOST:-}" ] && [ "${DB_HOST}" != "postgres" ]; then
+        log_info "检测到外部 PostgreSQL 地址，跳过拉取本地 postgres 镜像"
+    else
+        profiles+=(--profile postgres)
+    fi
+
+    if [ "$storage_type" = "minio" ]; then
+        if is_true "${USE_EXTERNAL_MINIO:-}"; then
+            log_info "USE_EXTERNAL_MINIO=true，跳过拉取本地 minio 镜像"
+        elif [ -n "${MINIO_ENDPOINT:-}" ] && [ "${MINIO_ENDPOINT}" != "minio:9000" ]; then
+            log_info "检测到外部 MinIO 地址，跳过拉取本地 minio 镜像"
+        else
+            profiles+=(--profile minio)
+        fi
+    fi
+
+    if is_true "${NEO4J_ENABLE:-false}"; then
+        if is_true "${USE_EXTERNAL_NEO4J:-}"; then
+            log_info "USE_EXTERNAL_NEO4J=true，跳过拉取本地 neo4j 镜像"
+        elif [ -n "${NEO4J_URI:-}" ] && [[ "${NEO4J_URI}" != *"neo4j:7687"* ]]; then
+            log_info "检测到外部 Neo4j 地址，跳过拉取本地 neo4j 镜像"
+        else
+            profiles+=(--profile neo4j)
+        fi
+    fi
     
     check_platform
     
     # 进入项目根目录再执行docker-compose命令
     cd "$PROJECT_ROOT"
     
-    # 拉取所有镜像
-    log_info "拉取所有服务的最新镜像..."
-	PLATFORM=$PLATFORM "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD pull
+	# 拉取所有镜像
+	log_info "拉取所有服务的最新镜像..."
+	PLATFORM=$PLATFORM "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD "${profiles[@]}" pull
     if [ $? -ne 0 ]; then
         log_error "镜像拉取失败"
         return 1
@@ -752,7 +874,7 @@ else
             printf "%b\n" "${GREEN}  - Jaeger链路追踪: http://localhost:16686${NC}"
             echo ""
             log_info "正在持续输出容器日志（按 Ctrl+C 退出日志，容器不会停止）..."
-            "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD logs app docreader postgres --since=10s -f
+            "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD logs --since=10s -f $DOCKER_LOG_SERVICES
         else
             log_error "部分服务启动失败，请检查日志并修复问题"
         fi
@@ -766,7 +888,7 @@ else
         printf "%b\n" "${GREEN}  - Jaeger链路追踪: http://localhost:16686${NC}"
         echo ""
         log_info "正在持续输出容器日志（按 Ctrl+C 退出日志，容器不会停止）..."
-        "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD logs app docreader postgres --since=10s -f
+        "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD logs --since=10s -f $DOCKER_LOG_SERVICES
     fi
 fi
 

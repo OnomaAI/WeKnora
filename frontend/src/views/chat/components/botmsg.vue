@@ -168,18 +168,18 @@ const getActualContent = () => {
 // 格式化标题
 const formatManualTitle = (question) => {
     if (!question) {
-        return '会话摘录';
+        return /* 원문: 会话摘录 */ '대화 발췌';
     }
     const condensed = question.replace(/\s+/g, ' ').trim();
     if (!condensed) {
-        return '会话摘录';
+        return /* 원문: 会话摘录 */ '대화 발췌';
     }
     return condensed.length > 40 ? `${condensed.slice(0, 40)}...` : condensed;
 };
 
 // 构建手动添加的 Markdown 内容
 const buildManualMarkdown = (question, answer) => {
-    const safeAnswer = answer?.trim() || '（无回答内容）';
+    const safeAnswer = answer?.trim() || /* 원문: （无回答内容） */ '(응답 내용 없음)';
     return `${safeAnswer}`;
 };
 
@@ -187,14 +187,14 @@ const buildManualMarkdown = (question, answer) => {
 const handleCopyAnswer = async () => {
     const content = getActualContent();
     if (!content) {
-        MessagePlugin.warning(t('chat.emptyContentWarning') || '当前回答为空，无法复制');
+        MessagePlugin.warning(t('chat.emptyContentWarning') || /* 원문: 当前回答为空，无法复制 */ '현재 응답이 비어 있어 복사할 수 없습니다');
         return;
     }
 
     try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(content);
-            MessagePlugin.success(t('chat.copySuccess') || '已复制到剪贴板');
+            MessagePlugin.success(t('chat.copySuccess') || /* 원문: 已复制到剪贴板 */ '클립보드에 복사되었습니다');
         } else {
             const textArea = document.createElement('textarea');
             textArea.value = content;
@@ -204,11 +204,11 @@ const handleCopyAnswer = async () => {
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            MessagePlugin.success(t('chat.copySuccess') || '已复制到剪贴板');
+            MessagePlugin.success(t('chat.copySuccess') || /* 원문: 已复制到剪贴板 */ '클립보드에 복사되었습니다');
         }
     } catch (err) {
-        console.error('复制失败:', err);
-        MessagePlugin.error(t('chat.copyFailed') || '复制失败，请手动复制');
+        console.error('복사 실패:', err);
+        MessagePlugin.error(t('chat.copyFailed') || /* 원문: 复制失败，请手动复制 */ '복사에 실패했습니다. 수동으로 복사해 주세요');
     }
 };
 
@@ -216,7 +216,7 @@ const handleCopyAnswer = async () => {
 const handleAddToKnowledge = () => {
     const content = getActualContent();
     if (!content) {
-        MessagePlugin.warning(t('chat.emptyContentWarning') || '当前回答为空，无法保存到知识库');
+        MessagePlugin.warning(t('chat.emptyContentWarning') || /* 원문: 当前回答为空，无法保存到知识库 */ '현재 응답이 비어 있어 지식 베이스에 저장할 수 없습니다');
         return;
     }
 
@@ -231,7 +231,7 @@ const handleAddToKnowledge = () => {
         status: 'draft',
     });
 
-    MessagePlugin.info(t('chat.editorOpened') || '已打开编辑器，请选择知识库后保存');
+    MessagePlugin.info(t('chat.editorOpened') || /* 원문: 已打开编辑器，请选择知识库后保存 */ '편집기를 열었습니다. 지식 베이스를 선택한 뒤 저장해 주세요');
 };
 
 // 处理 markdown-content 中图片的点击事件

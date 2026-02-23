@@ -346,7 +346,7 @@ const systemInfo = ref<any>(null)
 
 // 计算图数据库是否启用
 const isGraphDatabaseEnabled = computed(() => {
-  return systemInfo.value?.graph_database_engine && systemInfo.value.graph_database_engine !== '未启用'
+  return systemInfo.value?.graph_database_engine && systemInfo.value.graph_database_engine !== /* 원문: 未启用 */ '미활성화'
 })
 
 // Watch for prop changes
@@ -516,18 +516,19 @@ const handleExtract = async () => {
 
 // 默认示例
 const defaultExtractExample = () => {
-  localGraphExtract.value.text = `《红楼梦》，又名《石头记》，是清代作家曹雪芹创作的中国古典四大名著之一，被誉为中国封建社会的百科全书。该书前80回由曹雪芹所著，后40回一般认为是高鹗所续。小说以贾、史、王、薛四大家族的兴衰为背景，以贾宝玉、林黛玉和薛宝钗的爱情悲剧为主线，刻画了以贾宝玉和金陵十二钗为中心的正邪两赋、贤愚并出的高度复杂的人物群像。成书于乾隆年间（1743年前后），是中国文学史上现实主义的高峰，对后世影响深远。`
-  localGraphExtract.value.tags = ['作者', '别名']
+  // 원문(중국어): 《红楼梦》，又名《石头记》...
+  localGraphExtract.value.text = `《홍루몽》(별칭 《석두기》)은 청대 작가 조설근이 창작한 중국 고전 4대 명작 중 하나로, 봉건 사회의 백과사전으로 불립니다. 전반 80회는 조설근이 집필했고, 후반 40회는 일반적으로 고악이 이어 쓴 것으로 여겨집니다. 가·사·왕·설 4대 가문의 흥망을 배경으로, 가보옥·임대옥·설보채의 사랑 비극을 중심 서사로 삼아 복잡한 인물군상을 그려냅니다. 건륭 연간(1743년 전후)에 완성되었으며 중국 문학사 현실주의의 정점으로 평가받아 후대에 큰 영향을 끼쳤습니다.`
+  localGraphExtract.value.tags = [/* 원문: 作者 */ '작가', /* 원문: 别名 */ '별칭']
   localGraphExtract.value.nodes = [
-    {name: '红楼梦', attributes: ['中国古典四大名著之一', '又名《石头记》', '被誉为中国封建社会的百科全书']},
-    {name: '石头记', attributes: ['《红楼梦》的别名']},
-    {name: '曹雪芹', attributes: ['清代作家', '《红楼梦》前 80 回的作者']},
-    {name: '高鹗', attributes: ['一般认为是《红楼梦》后 40 回的续写者']}
+    {name: /* 원문: 红楼梦 */ '홍루몽', attributes: ['중국 고전 4대 명작 중 하나', '별칭 《석두기》', '중국 봉건 사회의 백과사전으로 불림']},
+    {name: /* 원문: 石头记 */ '석두기', attributes: ['《홍루몽》의 별칭']},
+    {name: /* 원문: 曹雪芹 */ '조설근', attributes: ['청대 작가', '《홍루몽》 전반 80회 저자']},
+    {name: /* 원문: 高鹗 */ '고악', attributes: ['일반적으로 《홍루몽》 후반 40회의 속작자로 알려짐']}
   ]
   localGraphExtract.value.relations = [
-    {node1: '红楼梦', node2: '石头记', type: '别名'},
-    {node1: '红楼梦', node2: '曹雪芹', type: '作者'},
-    {node1: '红楼梦', node2: '高鹗', type: '作者'}
+    {node1: '홍루몽', node2: '석두기', type: '별칭'},
+    {node1: '홍루몽', node2: '조설근', type: '작가'},
+    {node1: '홍루몽', node2: '고악', type: '작가'}
   ]
   handleNodesChange()
   MessagePlugin.success(t('graphSettings.exampleLoaded'))

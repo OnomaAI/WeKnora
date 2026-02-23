@@ -115,3 +115,5 @@ docker compose logs -f app docreader postgres minio redis
 ## 5) 참고
 - `start_all.sh --docker`는 현재 구성(`STORAGE_TYPE=minio`)에서 `minio` 프로필을 자동으로 띄우지 않아 재장애 가능성이 있습니다.
 - 따라서 현재 환경에서는 위의 `docker compose ...` 순서를 권장합니다.
+
+- 특정 서비스의 log 확인 방법 : `docker compose logs -f --tail=300 [service-name]

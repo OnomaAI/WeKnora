@@ -81,13 +81,13 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
     
     if (!error.response) {
-      return Promise.reject({ message: "网络错误，请检查您的网络连接" });
+      return Promise.reject({ message: /* 원문: 网络错误，请检查您的网络连接 */ "네트워크 오류입니다. 네트워크 연결을 확인해 주세요" });
     }
     
     // 如果是登录接口的401，直接返回错误以便页面展示toast，不做跳转
     if (error.response.status === 401 && originalRequest?.url?.includes('/auth/login')) {
       const { status, data } = error.response;
-      return Promise.reject({ status, message: (typeof data === 'object' ? data?.message : data) || '用户名或密码错误' });
+      return Promise.reject({ status, message: (typeof data === 'object' ? data?.message : data) || /* 원문: 用户名或密码错误 */ '사용자명 또는 비밀번호가 올바르지 않습니다' });
     }
 
     // 如果是401错误且不是刷新token的请求，尝试刷新token
@@ -130,7 +130,7 @@ instance.interceptors.response.use(
             
             return instance(originalRequest);
           } else {
-            throw new Error(response.message || 'Token刷新失败');
+            throw new Error(response.message || /* 원문: Token刷新失败 */ '토큰 갱신에 실패했습니다');
           }
         } catch (refreshError) {
           // 刷新失败，清除所有token并跳转到登录页
@@ -162,7 +162,7 @@ instance.interceptors.response.use(
           window.location.href = '/login';
         }
         
-        return Promise.reject({ message: '请重新登录' });
+        return Promise.reject({ message: /* 원문: 请重新登录 */ '다시 로그인해 주세요' });
       }
     }
     
@@ -170,7 +170,7 @@ instance.interceptors.response.use(
     if (error.response.status === 413) {
       return Promise.reject({ 
         status: 413, 
-        message: '文件大小超过限制，请上传较小的文件',
+        message: /* 원문: 文件大小超过限制，请上传较小的文件 */ '파일 크기가 제한을 초과했습니다. 더 작은 파일을 업로드해 주세요',
         success: false
       });
     }

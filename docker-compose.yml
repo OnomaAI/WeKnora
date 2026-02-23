@@ -58,9 +58,9 @@ services:
       - COS_ENABLE_OLD_DOMAIN=${COS_ENABLE_OLD_DOMAIN:-}
       - GIN_MODE=${GIN_MODE:-release}
       - DISABLE_REGISTRATION=${DISABLE_REGISTRATION:-false}
-      - DB_DRIVER=postgres
-      - DB_HOST=postgres
-      - DB_PORT=5432
+      - DB_DRIVER=${DB_DRIVER:-postgres}
+      - DB_HOST=${DB_HOST:-postgres}
+      - DB_PORT=${DB_PORT:-5432}
       - DB_USER=${DB_USER:-}
       - DB_PASSWORD=${DB_PASSWORD:-}
       - DB_NAME=${DB_NAME:-}
@@ -85,7 +85,7 @@ services:
       - STORAGE_TYPE=${STORAGE_TYPE:-}
       - LOCAL_STORAGE_BASE_DIR=${LOCAL_STORAGE_BASE_DIR:-}
       - AUTO_RECOVER_DIRTY=${AUTO_RECOVER_DIRTY:-true}
-      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT:-${MINIO_URL:-minio}:${MINIO_PORT:-9000}}
       - MINIO_ACCESS_KEY_ID=${MINIO_ACCESS_KEY_ID:-minioadmin}
       - MINIO_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY:-minioadmin}
       - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME:-}
@@ -114,8 +114,6 @@ services:
     depends_on:
       redis:
         condition: service_started
-      postgres:
-        condition: service_healthy
       docreader:
         condition: service_healthy
     networks:
@@ -145,8 +143,8 @@ services:
     ports:
       - "${DOCREADER_PORT:-50051}:50051"
     environment:
-      - MINIO_ENDPOINT=minio:9000
-      - MINIO_PUBLIC_ENDPOINT=http://localhost:${MINIO_PORT:-9000}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT:-${MINIO_URL:-minio}:${MINIO_PORT:-9000}}
+      - MINIO_PUBLIC_ENDPOINT=${MINIO_PUBLIC_ENDPOINT:-http://localhost:${MINIO_PORT:-9000}}
       - MINERU_ENDPOINT=${MINERU_ENDPOINT:-}
       - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-}
     healthcheck:
@@ -182,6 +180,9 @@ services:
     restart: unless-stopped
     # 添加停机时的优雅退出时间
     stop_grace_period: 1m
+    profiles:
+      - postgres
+      - full
 
   redis:
     image: redis:7.0-alpine

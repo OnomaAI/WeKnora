@@ -5,13 +5,15 @@
       <p class="section-description">{{ $t('tenant.sectionDescription') }}</p>
     </div>
 
-    <!-- Loading state -->
+    <!-- 원문: Loading state -->
+    <!-- 로딩 상태 -->
     <div v-if="loading" class="loading-inline">
       <t-loading size="small" />
       <span>{{ $t('tenant.loadingInfo') }}</span>
     </div>
 
-    <!-- Error state -->
+    <!-- 원문: Error state -->
+    <!-- 오류 상태 -->
     <div v-else-if="error" class="error-inline">
       <t-alert theme="error" :message="error">
         <template #operation>
@@ -20,9 +22,11 @@
       </t-alert>
     </div>
 
-    <!-- Content -->
+    <!-- 원문: Content -->
+    <!-- 콘텐츠 -->
     <div v-else class="settings-group">
-      <!-- Tenant ID -->
+      <!-- 원문: Tenant ID -->
+      <!-- 테넌트 ID -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.details.idLabel') }}</label>
@@ -33,7 +37,8 @@
         </div>
       </div>
 
-      <!-- Tenant name -->
+      <!-- 원문: Tenant name -->
+      <!-- 테넌트 이름 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.details.nameLabel') }}</label>
@@ -44,7 +49,8 @@
         </div>
       </div>
 
-      <!-- Tenant description -->
+      <!-- 원문: Tenant description -->
+      <!-- 테넌트 설명 -->
       <div v-if="tenantInfo?.description" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.details.descriptionLabel') }}</label>
@@ -55,7 +61,8 @@
         </div>
       </div>
 
-      <!-- Tenant business -->
+      <!-- 원문: Tenant business -->
+      <!-- 테넌트 사업 정보 -->
       <div v-if="tenantInfo?.business" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.details.businessLabel') }}</label>
@@ -66,7 +73,8 @@
         </div>
       </div>
 
-      <!-- Tenant status -->
+      <!-- 원문: Tenant status -->
+      <!-- 테넌트 상태 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.details.statusLabel') }}</label>
@@ -83,7 +91,8 @@
         </div>
       </div>
 
-      <!-- Tenant creation time -->
+      <!-- 원문: Tenant creation time -->
+      <!-- 테넌트 생성 시간 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.details.createdAtLabel') }}</label>
@@ -94,7 +103,8 @@
         </div>
       </div>
 
-      <!-- Storage quota -->
+      <!-- 원문: Storage quota -->
+      <!-- 저장소 할당량 -->
       <div v-if="tenantInfo?.storage_quota !== undefined" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.storage.quotaLabel') }}</label>
@@ -105,7 +115,8 @@
         </div>
       </div>
 
-      <!-- Used storage -->
+      <!-- 원문: Used storage -->
+      <!-- 사용한 저장소 -->
       <div v-if="tenantInfo?.storage_quota !== undefined" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.storage.usedLabel') }}</label>
@@ -116,7 +127,8 @@
         </div>
       </div>
 
-      <!-- Storage usage -->
+      <!-- 원문: Storage usage -->
+      <!-- 저장소 사용률 -->
       <div v-if="tenantInfo?.storage_quota !== undefined" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.storage.usageLabel') }}</label>
@@ -147,12 +159,14 @@ import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 
-// Reactive state
+// 원문: Reactive state
+// 반응형 상태
 const tenantInfo = ref<TenantInfo | null>(null)
 const loading = ref(true)
 const error = ref('')
 
-// Methods
+// 원문: Methods
+// 메서드
 const loadInfo = async () => {
   try {
     loading.value = true
@@ -236,7 +250,8 @@ const getUsagePercentage = () => {
   return Math.min(Math.round(percentage * 100) / 100, 100)
 }
 
-// Lifecycle
+// 원문: Lifecycle
+// 라이프사이클
 onMounted(() => {
   loadInfo()
 })
@@ -348,4 +363,3 @@ onMounted(() => {
   }
 }
 </style>
-

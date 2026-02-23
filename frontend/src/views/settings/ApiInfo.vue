@@ -5,13 +5,15 @@
       <p class="section-description">{{ $t('tenant.api.description') }}</p>
     </div>
 
-    <!-- Loading state -->
+    <!-- 원문: Loading state -->
+    <!-- 로딩 상태 -->
     <div v-if="loading" class="loading-inline">
       <t-loading size="small" />
       <span>{{ $t('tenant.loadingInfo') }}</span>
     </div>
 
-    <!-- Error state -->
+    <!-- 원문: Error state -->
+    <!-- 오류 상태 -->
     <div v-else-if="error" class="error-inline">
       <t-alert theme="error" :message="error">
         <template #operation>
@@ -20,9 +22,11 @@
       </t-alert>
     </div>
 
-    <!-- Content -->
+    <!-- 원문: Content -->
+    <!-- 콘텐츠 -->
     <div v-else class="settings-group">
-      <!-- API Key -->
+      <!-- 원문: API Key -->
+      <!-- API 키 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.api.keyLabel') }}</label>
@@ -55,7 +59,8 @@
         </div>
       </div>
 
-      <!-- API docs -->
+      <!-- 원문: API docs -->
+      <!-- API 문서 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.api.docLabel') }}</label>
@@ -69,10 +74,12 @@
         </div>
       </div>
 
-      <!-- User info -->
+      <!-- 원문: User info -->
+      <!-- 사용자 정보 -->
       <div class="info-section-title">{{ $t('tenant.api.userSectionTitle') }}</div>
 
-      <!-- User ID -->
+      <!-- 원문: User ID -->
+      <!-- 사용자 ID -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.api.userIdLabel') }}</label>
@@ -83,7 +90,8 @@
         </div>
       </div>
 
-      <!-- Username -->
+      <!-- 원문: Username -->
+      <!-- 사용자 이름 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.api.usernameLabel') }}</label>
@@ -94,7 +102,8 @@
         </div>
       </div>
 
-      <!-- Email -->
+      <!-- 원문: Email -->
+      <!-- 이메일 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.api.emailLabel') }}</label>
@@ -105,7 +114,8 @@
         </div>
       </div>
 
-      <!-- Created at -->
+      <!-- 원문: Created at -->
+      <!-- 생성 시각 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('tenant.api.createdAtLabel') }}</label>
@@ -128,14 +138,16 @@ import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 
-// Reactive state
+// 원문: Reactive state
+// 반응형 상태
 const tenantInfo = ref<TenantInfo | null>(null)
 const userInfo = ref<UserInfo | null>(null)
 const loading = ref(true)
 const error = ref('')
 const showApiKey = ref(false)
 
-// Computed
+// 원문: Computed
+// 계산 속성
 const displayApiKey = computed(() => {
   if (!tenantInfo.value?.api_key) return ''
   if (showApiKey.value) {
@@ -148,7 +160,8 @@ const displayApiKey = computed(() => {
   return masked
 })
 
-// Methods
+// 원문: Methods
+// 메서드
 const loadInfo = async () => {
   try {
     loading.value = true
@@ -221,7 +234,8 @@ const formatDate = (dateStr: string | undefined) => {
   }
 }
 
-// Lifecycle
+// 원문: Lifecycle
+// 라이프사이클
 onMounted(() => {
   loadInfo()
 })
@@ -357,4 +371,3 @@ onMounted(() => {
   }
 }
 </style>
-

@@ -346,7 +346,7 @@ const remainingCount = computed(() => Math.max(0, selectedKbs.value.length - 2))
 const inputPlaceholder = computed(() => {
   // 如果选择了自定义智能体
   if (isCustomAgent.value && selectedAgent.value) {
-    // 有描述时显示描述，否则显示"向 [名称] 提问"
+    // 설명이 있으면 설명을 표시하고, 없으면 " [이름]에게 질문" 문구를 표시 (원문: "向 [名称] 提问")
     if (selectedAgent.value.description) {
       return selectedAgent.value.description;
     }
@@ -604,7 +604,7 @@ const handleModelChange = async (value: string | number | Array<string | number>
       MessagePlugin.success(t('conversationSettings.toasts.chatModelSaved'));
     }
   } catch (error) {
-    console.error('保存模型配置失败:', error);
+    console.error('모델 설정 저장 실패:', error);
     MessagePlugin.error(t('conversationSettings.toasts.saveFailed'));
     // 恢复到之前的值
     selectedModelId.value = conversationConfig.value?.summary_model_id || '';
@@ -1745,7 +1745,7 @@ onBeforeRouteUpdate((to, from, next) => {
             </span>
           </span>
           <span class="mention-chip__name" :title="item.name">{{ item.name }}</span>
-          <span class="mention-chip__remove" @click.stop="removeSelectedItem(item)" aria-label="移除">×</span>
+          <span class="mention-chip__remove" @click.stop="removeSelectedItem(item)" aria-label="제거">×</span>
         </span>
       </div>
       
@@ -2939,5 +2939,3 @@ const getImgSrc = (url: string) => {
   }
 }
 </style>
-
-

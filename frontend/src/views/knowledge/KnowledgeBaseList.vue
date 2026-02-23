@@ -479,8 +479,8 @@
     <!-- 空间下知识库空状态 -->
     <div v-if="spaceSelectionOrgId && !spaceKbsLoading && spaceKbsList.length === 0" class="empty-state">
       <img class="empty-img" src="@/assets/img/upload.svg" alt="">
-      <span class="empty-txt">{{ $t('knowledgeList.empty.sharedTitle') || '暂无共享知识库' }}</span>
-      <span class="empty-desc">{{ $t('knowledgeList.empty.sharedDescription') || '您可以加入组织或请求他人共享知识库给您' }}</span>
+      <span class="empty-txt">{{ $t('knowledgeList.empty.sharedTitle') || /* 원문: 暂无共享知识库 */ '공유된 지식 베이스가 없습니다' }}</span>
+      <span class="empty-desc">{{ $t('knowledgeList.empty.sharedDescription') || /* 원문: 您可以加入组织或请求他人共享知识库给您 */ '조직에 가입하거나 다른 사용자에게 지식 베이스 공유를 요청할 수 있습니다' }}</span>
     </div>
       </div>
     </div>
@@ -873,7 +873,7 @@ const handleSharedKbClick = (sharedKb: SharedKnowledgeBase) => {
   router.push(`/platform/knowledge-bases/${sharedKb.knowledge_base.id}`)
 }
 
-// 处理"全部"Tab 中的共享知识库卡片点击（直接进入知识库）
+// "전체" 탭의 공유 지식 베이스 카드 클릭 처리(지식 베이스로 바로 이동)
 const handleSharedKbClickFromAll = (kb: any) => {
   router.push(`/platform/knowledge-bases/${kb.id}`)
 }

@@ -684,7 +684,7 @@ onBeforeUnmount(() => {
         >
           <template #empty>
             <div style="padding: 20px; text-align: center; color: #999;">
-              {{ $t('manualEditor.noDocumentKnowledgeBases') || '暂无可用的文档型知识库，请先创建一个文档型知识库' }}
+              {{ $t('manualEditor.noDocumentKnowledgeBases') || /* 원문: 暂无可用的文档型知识库，请先创建一个文档型知识库 */ '사용 가능한 문서형 지식 베이스가 없습니다. 먼저 문서형 지식 베이스를 생성해 주세요' }}
             </div>
           </template>
         </t-select>
@@ -1054,5 +1054,4 @@ onBeforeUnmount(() => {
   z-index: 2600 !important;
 }
 </style>
-
 

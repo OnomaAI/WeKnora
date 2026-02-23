@@ -44,7 +44,7 @@ export function kbFileTypeVerification(file: any, silent = false) {
   let type = file.name.substring(file.name.lastIndexOf(".") + 1);
   if (!validTypes.includes(type)) {
     if (!silent) {
-      MessagePlugin.error("文件类型错误！");
+      MessagePlugin.error(/* 원문: 文件类型错误！ */ "파일 형식 오류!");
     }
     return true;
   }
@@ -53,13 +53,13 @@ export function kbFileTypeVerification(file: any, silent = false) {
     file.size > MAX_FILE_SIZE_BYTES
   ) {
     if (!silent) {
-      MessagePlugin.error(`pdf/doc文件不能超过${MAX_FILE_SIZE_MB}M！`);
+      MessagePlugin.error(/* 원문: pdf/doc文件不能超过${MAX_FILE_SIZE_MB}M！ */ `pdf/doc 파일은 ${MAX_FILE_SIZE_MB}MB를 초과할 수 없습니다!`);
     }
     return true;
   }
   if ((type == "txt" || type == "md") && file.size > MAX_FILE_SIZE_BYTES) {
     if (!silent) {
-      MessagePlugin.error(`txt/md文件不能超过${MAX_FILE_SIZE_MB}M！`);
+      MessagePlugin.error(/* 원문: txt/md文件不能超过${MAX_FILE_SIZE_MB}M！ */ `txt/md 파일은 ${MAX_FILE_SIZE_MB}MB를 초과할 수 없습니다!`);
     }
     return true;
   }

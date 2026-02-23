@@ -503,14 +503,14 @@ const getBaseUrlPlaceholder = () => {
 
 // 检查Ollama服务状态
 const checkOllamaServiceStatus = async () => {
-  console.log('开始检查Ollama服务状态...')
+  console.log('Ollama 서비스 상태 점검 시작...')
   checkingOllamaStatus.value = true
   try {
     const result = await checkOllamaStatus()
     ollamaServiceStatus.value = result.available
-    console.log('Ollama服务状态检查完成:', result.available)
+    console.log('Ollama 서비스 상태 점검 완료:', result.available)
   } catch (error) {
-    console.error('检查Ollama服务状态失败:', error)
+    console.error('Ollama 서비스 상태 점검 실패:', error)
     ollamaServiceStatus.value = false
   } finally {
     checkingOllamaStatus.value = false
@@ -519,7 +519,7 @@ const checkOllamaServiceStatus = async () => {
 
 // 打开Ollama设置窗口
 const goToOllamaSettings = async () => {
-  console.log('点击跳转到Ollama设置按钮')
+  console.log('Ollama 설정으로 이동 버튼 클릭')
   // 关闭当前弹窗
   emit('update:visible', false)
   
@@ -531,9 +531,9 @@ const goToOllamaSettings = async () => {
   }
   
   // 打开设置窗口并直接跳转到Ollama设置
-  console.log('调用uiStore.openSettings')
+  console.log('uiStore.openSettings 호출')
   uiStore.openSettings('ollama')
-  console.log('uiStore.openSettings调用完成')
+  console.log('uiStore.openSettings 호출 완료')
 }
 
 // 监听 visible 变化，初始化表单
@@ -619,7 +619,7 @@ const filteredOllamaModels = computed(() => {
   )
 })
 
-// 是否显示"下载模型"选项
+// "다운로드 모델" 옵션 표시 여부 (원문: "下载模型")
 const showDownloadOption = computed(() => {
   if (!searchKeyword.value.trim()) return false
   // 检查搜索词是否已存在于模型列表中
@@ -685,7 +685,7 @@ const checkModelStatus = async () => {
     modelChecked.value = true
     modelAvailable.value = result.models[formData.value.modelName] || false
   } catch (error) {
-    console.error('检查模型状态失败:', error)
+    console.error('모델 상태 점검 실패:', error)
     modelChecked.value = false
     modelAvailable.value = false
   }
@@ -720,7 +720,7 @@ const checkOllamaDimension = async () => {
       MessagePlugin.warning(dimensionMessage.value)
     }
   } catch (error: any) {
-    console.error('检测 Ollama 模型维度失败:', error)
+    console.error('Ollama 모델 차원 감지 실패:', error)
     dimensionChecked.value = true
     dimensionSuccess.value = false
     dimensionMessage.value = error.message || t('model.editor.dimensionFailed')
@@ -806,7 +806,7 @@ const checkRemoteAPI = async () => {
       MessagePlugin.error(remoteMessage.value)
     }
   } catch (error: any) {
-    console.error('Remote API 校验失败:', error)
+    console.error('원격 API 검증 실패:', error)
     remoteChecked.value = true
     remoteAvailable.value = false
     remoteMessage.value = error.message || t('model.editor.connectionConfigError')
@@ -859,7 +859,7 @@ const handleConfirm = async () => {
     dialogVisible.value = false
     // 移除此处的成功提示，由父组件统一处理
   } catch (error) {
-    console.error('表单验证失败:', error)
+    console.error('폼 검증 실패:', error)
   } finally {
     saving.value = false
   }
@@ -939,7 +939,7 @@ const startDownload = async (modelName: string) => {
           currentDownloadModel.value = ''
         }
       } catch (error) {
-        console.error('获取下载进度失败:', error)
+        console.error('다운로드 진행률 조회 실패:', error)
       }
     }, 1000) // 每秒查询一次
     
@@ -1552,4 +1552,3 @@ const handleCancel = () => {
   }
 }
 </style>
-

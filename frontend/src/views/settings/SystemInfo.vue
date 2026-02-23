@@ -5,13 +5,15 @@
       <p class="section-description">{{ $t('system.sectionDescription') }}</p>
     </div>
 
-    <!-- Loading state -->
+    <!-- 원문: Loading state -->
+    <!-- 로딩 상태 -->
     <div v-if="loading" class="loading-inline">
       <t-loading size="small" />
       <span>{{ $t('system.loadingInfo') }}</span>
     </div>
 
-    <!-- Error state -->
+    <!-- 원문: Error state -->
+    <!-- 오류 상태 -->
     <div v-else-if="error" class="error-inline">
       <t-alert theme="error" :message="error">
         <template #operation>
@@ -20,9 +22,11 @@
       </t-alert>
     </div>
 
-    <!-- Content -->
+    <!-- 원문: Content -->
+    <!-- 콘텐츠 -->
     <div v-else class="settings-group">
-      <!-- System version -->
+      <!-- 원문: System version -->
+      <!-- 시스템 버전 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('system.versionLabel') }}</label>
@@ -38,7 +42,8 @@
         </div>
       </div>
 
-      <!-- Build time -->
+      <!-- 원문: Build time -->
+      <!-- 빌드 시간 -->
       <div v-if="systemInfo?.build_time" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('system.buildTimeLabel') }}</label>
@@ -49,7 +54,8 @@
         </div>
       </div>
 
-      <!-- Go version -->
+      <!-- 원문: Go version -->
+      <!-- Go 버전 -->
       <div v-if="systemInfo?.go_version" class="setting-row">
         <div class="setting-info">
           <label>{{ $t('system.goVersionLabel') }}</label>
@@ -60,7 +66,8 @@
         </div>
       </div>
 
-      <!-- Keyword Index Engine -->
+      <!-- 원문: Keyword Index Engine -->
+      <!-- 키워드 인덱스 엔진 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('system.keywordIndexEngineLabel') }}</label>
@@ -71,7 +78,8 @@
         </div>
       </div>
 
-      <!-- Vector Store Engine -->
+      <!-- 원문: Vector Store Engine -->
+      <!-- 벡터 저장소 엔진 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('system.vectorStoreEngineLabel') }}</label>
@@ -82,7 +90,8 @@
         </div>
       </div>
 
-      <!-- Graph Database Engine -->
+      <!-- 원문: Graph Database Engine -->
+      <!-- 그래프 데이터베이스 엔진 -->
       <div class="setting-row">
         <div class="setting-info">
           <label>{{ $t('system.graphDatabaseEngineLabel') }}</label>
@@ -104,12 +113,14 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-// Reactive state
+// 원문: Reactive state
+// 반응형 상태
 const systemInfo = ref<SystemInfo | null>(null)
 const loading = ref(true)
 const error = ref('')
 
-// Methods
+// 원문: Methods
+// 메서드
 const loadInfo = async () => {
   try {
     loading.value = true
@@ -129,7 +140,8 @@ const loadInfo = async () => {
   }
 }
 
-// Lifecycle
+// 원문: Lifecycle
+// 라이프사이클
 onMounted(() => {
   loadInfo()
 })

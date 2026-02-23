@@ -11,14 +11,14 @@ const messages = {
   'ko-KR': koKR
 }
 
-// Получаем сохраненный язык из localStorage или используем китайский по умолчанию
-const savedLocale = localStorage.getItem('locale') || 'zh-CN'
+// Get saved language from localStorage, default to English
+const savedLocale = localStorage.getItem('locale') || 'en-US'
 console.log('i18n инициализация с языком:', savedLocale)
 
 const i18n = createI18n({
   legacy: false,
   locale: savedLocale,
-  fallbackLocale: 'zh-CN',
+  fallbackLocale: 'en-US',
   globalInjection: true,
   messages
 })
