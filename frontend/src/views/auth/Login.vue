@@ -492,9 +492,7 @@ const showLanguageMenu = ref(false)
 
 // Language options
 const languageOptions = [
-  { value: 'zh-CN', label: /* 원문: 简体中文 */ '중국어(간체)', shortLabel: /* 원문: 中文 */ '중국어', flag: '🇨🇳' },
   { value: 'en-US', label: /* 원문: English */ '영어', shortLabel: /* 원문: EN */ '영어', flag: '🇺🇸' },
-  { value: 'ru-RU', label: 'Русский', shortLabel: 'RU', flag: '🇷🇺' },
   { value: 'ko-KR', label: '한국어', shortLabel: '한국어', flag: '🇰🇷' }
 ]
 
