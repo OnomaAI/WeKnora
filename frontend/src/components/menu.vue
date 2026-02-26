@@ -1,6 +1,6 @@
 <template>
     <div class="aside_box">
-        <div class="logo_box" @click="router.push('/platform/knowledge-bases')" style="cursor: pointer;">
+        <div class="logo_box" @click="router.push('/platform/creatChat')" style="cursor: pointer;">
             <img class="logo" src="@/assets/img/weknora.png" alt="">
         </div>
         
@@ -164,7 +164,7 @@ const getIconActiveState = (itemPath: string) => {
 // 分离上下两部分菜单
 const topMenuItems = computed<MenuItem[]>(() => {
     return (menuArr.value as unknown as MenuItem[]).filter((item: MenuItem) => 
-        item.path === 'knowledge-bases' || item.path === 'agents' || item.path === 'organizations' || item.path === 'creatChat'
+        item.path === 'creatChat'
     );
 });
 

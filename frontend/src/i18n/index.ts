@@ -1,19 +1,25 @@
 import { createI18n } from 'vue-i18n'
-import zhCN from './locales/zh-CN.ts'
-import ruRU from './locales/ru-RU.ts'
 import enUS from './locales/en-US.ts'
 import koKR from './locales/ko-KR.ts'
 
 const messages = {
-  'zh-CN': zhCN,
   'en-US': enUS,
-  'ru-RU': ruRU,
   'ko-KR': koKR
 }
 
-// Get saved language from localStorage, default to English
-const savedLocale = localStorage.getItem('locale') || 'en-US'
-console.log('i18n инициализация с языком:', savedLocale)
+const SUPPORTED_LOCALES = ['en-US', 'ko-KR'] as const
+type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
+
+// Get saved language from localStorage and fallback to English if unsupported.
+const rawSavedLocale = localStorage.getItem('locale')
+const savedLocale: SupportedLocale =
+  rawSavedLocale && SUPPORTED_LOCALES.includes(rawSavedLocale as SupportedLocale)
+    ? (rawSavedLocale as SupportedLocale)
+    : 'en-US'
+
+if (rawSavedLocale !== savedLocale) {
+  localStorage.setItem('locale', savedLocale)
+}
 
 const i18n = createI18n({
   legacy: false,

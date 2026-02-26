@@ -72,3 +72,4 @@ WeKnora API 按功能分为以下几类：
 | 聊天功能 | 基于知识库和 Agent 进行问答 | [chat.md](./chat.md) |
 | 消息管理 | 获取和管理对话消息 | [message.md](./message.md) |
 | 评估功能 | 评估模型性能 | [evaluation.md](./evaluation.md) |
+| 外部后端兼容（韩文） | 前端无改造迁移到外部后端时的接口契约 | [external-backend-ko.md](./external-backend-ko.md) |

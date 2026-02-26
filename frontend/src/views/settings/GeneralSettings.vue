@@ -20,9 +20,7 @@
             @change="handleLanguageChange"
             style="width: 280px;"
           >
-            <t-option value="zh-CN" :label="$t('language.zhCN')">{{ $t('language.zhCN') }}</t-option>
             <t-option value="en-US" :label="$t('language.enUS')">{{ $t('language.enUS') }}</t-option>
-            <t-option value="ru-RU" :label="$t('language.ruRU')">{{ $t('language.ruRU') }}</t-option>
             <t-option value="ko-KR" :label="$t('language.koKR')">{{ $t('language.koKR') }}</t-option>
           </t-select>
         </div>
@@ -37,6 +35,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
+const SUPPORTED_LOCALES = ['en-US', 'ko-KR']
 
 // 원문: 本地状态
 // 로컬 상태
@@ -49,17 +48,22 @@ onMounted(() => {
   // 원문: 从 localStorage 加载语言设置
   // localStorage 에서 언어 설정 로드
   const savedLocale = localStorage.getItem('locale')
-  if (savedLocale) {
+  if (savedLocale && SUPPORTED_LOCALES.includes(savedLocale)) {
     localLanguage.value = savedLocale
     locale.value = savedLocale
   } else {
-    localLanguage.value = locale.value
+    localLanguage.value = 'en-US'
+    locale.value = 'en-US'
+    localStorage.setItem('locale', 'en-US')
   }
 })
 
 // 원문: 处理语言变化
 // 언어 변경 처리
 const handleLanguageChange = () => {
+  if (!SUPPORTED_LOCALES.includes(localLanguage.value)) {
+    localLanguage.value = 'en-US'
+  }
   locale.value = localLanguage.value
   localStorage.setItem('locale', localLanguage.value)
   MessagePlugin.success(t('language.languageSaved'))
